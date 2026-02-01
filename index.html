@@ -1050,28 +1050,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        
-        .phone-format {
-            position: relative;
-        }
-        
-        .phone-prefix {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-            font-weight: 600;
-            background: var(--gray-light);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 14px;
-            pointer-events: none;
-        }
-        
-        .phone-input {
-            padding-left: 70px !important;
-        }
     </style>
 </head>
 <body>
@@ -1088,7 +1066,7 @@
         <p class="tagline">منصة تعليمية متكاملة للإجابة على استفسارات الطلاب بكل خصوصية وسرية تامة، نضمن لك الحصول على إجابات دقيقة من خبراء متخصصين</p>
     </header>
 
-    <div class="login-container" id="loginContainer">
+    <div class="login-container active" id="loginContainer">
         <div class="container">
             <div class="login-card">
                 <div class="login-tabs">
@@ -1165,14 +1143,13 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="registerPhone">رقم الواتساب الموريتاني (8 أرقام فقط)</label>
-                            <div class="input-with-icon phone-format">
-                                <div class="phone-prefix">222</div>
+                            <label for="registerPhone">رقم الواتساب الموريتاني (8 أرقام)</label>
+                            <div class="input-with-icon">
                                 <i class="fab fa-whatsapp"></i>
-                                <input type="tel" id="registerPhone" class="phone-input" placeholder="مثال: 12345678" maxlength="8" pattern="\d{8}" inputmode="numeric">
+                                <input type="tel" id="registerPhone" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
                             </div>
-                            <div class="error-message" id="registerPhoneError">يجب إدخال 8 أرقام فقط (بدون مفتاح الدولة 222)</div>
-                            <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">سيتم إضافة مفتاح موريتانيا (222) تلقائياً، أدخل 8 أرقام فقط</p>
+                            <div class="error-message" id="registerPhoneError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
+                            <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">يمكنك إضافة رقم واتساب لاحقاً من إعدادات الحساب للتواصل مع المشرفين</p>
                         </div>
                         
                         <button type="submit" class="submit-btn" id="registerSubmitBtn">
@@ -1255,13 +1232,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="questionWhatsapp">رقم الواتساب الموريتاني (8 أرقام فقط)</label>
-                        <div class="input-with-icon phone-format">
-                            <div class="phone-prefix">222</div>
+                        <label for="questionWhatsapp">رقم واتساب موريتاني (8 أرقام)</label>
+                        <div class="input-with-icon">
                             <i class="fab fa-whatsapp"></i>
-                            <input type="tel" id="questionWhatsapp" class="phone-input" placeholder="مثال: 12345678" maxlength="8" pattern="\d{8}" inputmode="numeric">
+                            <input type="tel" id="questionWhatsapp" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
                         </div>
-                        <div class="error-message" id="whatsappError">يجب إدخال 8 أرقام فقط (بدون مفتاح الدولة 222)</div>
+                        <div class="error-message" id="whatsappError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
                         <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">إذا لم تدخل رقم واتساب، سيتم استخدام الرقم المسجل في حسابك إن وجد</p>
                     </div>
                     
@@ -1310,13 +1286,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="accountPhone">رقم الواتساب الموريتاني (8 أرقام فقط)</label>
-                        <div class="input-with-icon phone-format">
-                            <div class="phone-prefix">222</div>
+                        <label for="accountPhone">رقم الواتساب الموريتاني (8 أرقام)</label>
+                        <div class="input-with-icon">
                             <i class="fab fa-whatsapp"></i>
-                            <input type="tel" id="accountPhone" class="phone-input" placeholder="مثال: 12345678" maxlength="8" pattern="\d{8}" inputmode="numeric">
+                            <input type="tel" id="accountPhone" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
                         </div>
-                        <div class="error-message" id="accountPhoneError">يجب إدخال 8 أرقام فقط (بدون مفتاح الدولة 222)</div>
+                        <div class="error-message" id="accountPhoneError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
                         <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">سيتم استخدام هذا الرقم للرد على أسئلتك</p>
                     </div>
                     
@@ -1422,23 +1397,24 @@
     </footer>
 
     <script>
-        // ==================== تهيئة Firebase ====================
-        const firebaseConfig = {
-            apiKey: "AIzaSyD7xmZ6lDgkxAwaVjdBetbRwOChIoe1juQ",
-            authDomain: "ayn-5b88a.firebaseapp.com",
-            projectId: "ayn-5b88a",
-            storageBucket: "ayn-5b88a.firebasestorage.app",
-            messagingSenderId: "733682854335",
-            appId: "1:733682854335:web:a06b02292ac21eebb8990a"
-        };
+        // بيانات مشروعك التي استخرجتها
+const firebaseConfig = {
+  apiKey: "AIzaSyD7xmZ6lDgkxAwaVjdBetbRwOChIoe1juQ",
+  authDomain: "ayn-5b88a.firebaseapp.com",
+  databaseURL: "https://ayn-5b88a-default-rtdb.firebaseio.com",
+  projectId: "ayn-5b88a",
+  storageBucket: "ayn-5b88a.firebasestorage.app",
+  messagingSenderId: "733682854335",
+  appId: "1:733682854335:web:a06b02292ac21eebb8990a",
+  measurementId: "G-JNPSK4MB8V"
+};
 
-        // تهيئة Firebase مع التحقق من عدم التهيئة المزدوجة
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+// تهيئة فيربيس بالطريقة المتوافقة مع ملفاتك الحالية
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+const auth = firebase.auth(); // هذا السطر تحتاجه في ملف الطالب index1.html
 
         class FirebaseStudentSystem {
             constructor() {
@@ -1447,20 +1423,20 @@
                 this.currentUser = null;
                 this.unsubscribeQuestions = null;
                 this.unsubscribeNotifications = null;
-                this.authPersistence = null;
                 
-                this.initSystem();
+                this.initAuthPersistence();
             }
             
-            async initSystem() {
-                try {
-                    await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-                    this.authPersistence = 'LOCAL';
-                    console.log('تم تعيين استمرارية المصادقة إلى LOCAL');
-                } catch (error) {
-                    console.error('خطأ في تعيين استمرارية المصادقة:', error);
-                    this.authPersistence = 'SESSION';
-                }
+            initAuthPersistence() {
+                return this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                    .then(() => {
+                        console.log('تم تعيين استمرارية المصادقة إلى LOCAL');
+                        return true;
+                    })
+                    .catch((error) => {
+                        console.error('خطأ في تعيين استمرارية المصادقة:', error);
+                        return false;
+                    });
             }
             
             getAuthErrorMessage(errorCode) {
@@ -1485,29 +1461,22 @@
                 return email + '@ayn.student';
             }
             
-            formatMauritanianPhone(phoneDigits) {
-                if (!phoneDigits) return '';
-                if (phoneDigits.length !== 8) return '';
-                return `222${phoneDigits}`;
+            validateMauritanianPhone(phone) {
+                if (!phone) return true;
+                const phoneRegex = /^222\d{8}$/;
+                return phoneRegex.test(phone);
             }
             
-            validatePhoneDigits(phoneDigits) {
-                if (!phoneDigits) return true;
-                if (phoneDigits.length !== 8) return false;
-                const phoneRegex = /^\d{8}$/;
-                return phoneRegex.test(phoneDigits);
-            }
-            
-            async registerStudent(name, username, password, phoneDigits = '') {
+            async registerStudent(name, username, password, phone = '') {
                 try {
                     if (!navigator.onLine) {
                         return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
                     }
                     
-                    if (phoneDigits && !this.validatePhoneDigits(phoneDigits)) {
+                    if (phone && !this.validateMauritanianPhone(phone)) {
                         return { 
                             success: false, 
-                            message: 'يجب إدخال 8 أرقام فقط لرقم الواتساب' 
+                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
                         };
                     }
                     
@@ -1515,14 +1484,11 @@
                     const userCredential = await this.auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
                     
-                    const formattedPhone = this.formatMauritanianPhone(phoneDigits);
-                    
                     await this.db.collection('users').doc(user.uid).set({
                         name: name,
                         username: username,
                         email: email,
-                        phone: formattedPhone,
-                        phoneDigits: phoneDigits,
+                        phone: phone || '',
                         role: 'student',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
@@ -1533,8 +1499,7 @@
                         name, 
                         username, 
                         email, 
-                        phone: formattedPhone,
-                        phoneDigits: phoneDigits,
+                        phone, 
                         role: 'student',
                         updatePassword: function(password) {
                             return user.updatePassword(password);
@@ -1611,10 +1576,10 @@
                 try {
                     if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
                     
-                    if (updates.phoneDigits && !this.validatePhoneDigits(updates.phoneDigits)) {
+                    if (updates.phone && !this.validateMauritanianPhone(updates.phone)) {
                         return { 
                             success: false, 
-                            message: 'يجب إدخال 8 أرقام فقط لرقم الواتساب' 
+                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
                         };
                     }
                     
@@ -1623,10 +1588,6 @@
                     if (updates.password && user) {
                         await user.updatePassword(updates.password);
                         delete updates.password;
-                    }
-                    
-                    if (updates.phoneDigits) {
-                        updates.phone = this.formatMauritanianPhone(updates.phoneDigits);
                     }
                     
                     await this.db.collection('users').doc(this.currentUser.uid).update(updates);
@@ -1640,7 +1601,7 @@
                 }
             }
             
-            async submitQuestion(subject, title, content, whatsappDigits = '') {
+            async submitQuestion(subject, title, content, whatsapp = '') {
                 try {
                     if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
                     
@@ -1648,15 +1609,14 @@
                         return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
                     }
                     
-                    if (whatsappDigits && !this.validatePhoneDigits(whatsappDigits)) {
+                    if (whatsapp && !this.validateMauritanianPhone(whatsapp)) {
                         return { 
                             success: false, 
-                            message: 'يجب إدخال 8 أرقام فقط لرقم الواتساب' 
+                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
                         };
                     }
                     
-                    const finalWhatsappDigits = whatsappDigits || this.currentUser.phoneDigits || '';
-                    const finalWhatsapp = this.formatMauritanianPhone(finalWhatsappDigits);
+                    const finalWhatsapp = whatsapp || this.currentUser.phone || '';
                     
                     if (!finalWhatsapp) {
                         return {
@@ -1669,7 +1629,6 @@
                         userId: this.currentUser.uid,
                         userName: this.currentUser.name,
                         userPhone: finalWhatsapp,
-                        userPhoneDigits: finalWhatsappDigits,
                         subject: subject,
                         title: title || '',
                         question: content,
@@ -1863,84 +1822,67 @@
             });
         }
         
-        async function checkAuthState() {
-            return new Promise((resolve) => {
-                auth.onAuthStateChanged(async (user) => {
-                    console.log('حالة المصادقة:', user ? 'تم تسجيل الدخول' : 'لم يتم تسجيل الدخول');
-                    
-                    if (user) {
-                        showLoading();
-                        try {
-                            const userDoc = await db.collection('users').doc(user.uid).get();
-                            if (userDoc.exists && userDoc.data().role === 'student') {
-                                studentSystem.currentUser = { 
-                                    uid: user.uid, 
-                                    ...userDoc.data(),
-                                    updatePassword: function(password) {
-                                        return user.updatePassword(password);
-                                    }
-                                };
-                                await showStudentDashboard();
-                            } else {
-                                await auth.signOut();
-                                studentSystem.currentUser = null;
-                                showLoginScreen();
-                            }
-                        } catch (error) {
-                            console.error('خطأ في التحقق من حالة المستخدم:', error);
-                            showLoginScreen();
-                        } finally {
+        function checkAuthState() {
+            auth.onAuthStateChanged(async (user) => {
+                console.log('حالة المصادقة:', user ? 'تم تسجيل الدخول' : 'لم يتم تسجيل الدخول');
+                
+                if (user) {
+                    showLoading();
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists && userDoc.data().role === 'student') {
+                            studentSystem.currentUser = { 
+                                uid: user.uid, 
+                                ...userDoc.data(),
+                                updatePassword: function(password) {
+                                    return user.updatePassword(password);
+                                }
+                            };
+                            showStudentDashboard();
+                        } else {
+                            await auth.signOut();
+                            studentSystem.currentUser = null;
                             hideLoading();
-                            resolve();
                         }
-                    } else {
-                        studentSystem.currentUser = null;
-                        showLoginScreen();
+                    } catch (error) {
+                        console.error('خطأ في التحقق من حالة المستخدم:', error);
                         hideLoading();
-                        resolve();
                     }
-                });
+                } else {
+                    studentSystem.currentUser = null;
+                    document.getElementById('loginContainer').classList.add('active');
+                    document.getElementById('studentDashboard').classList.remove('active');
+                    hideLoading();
+                }
             });
         }
         
-        function showLoginScreen() {
-            document.getElementById('loginContainer').classList.add('active');
-            document.getElementById('studentDashboard').classList.remove('active');
-        }
-        
-        async function showStudentDashboard() {
+        function showStudentDashboard() {
             document.getElementById('loginContainer').classList.remove('active');
             document.getElementById('studentDashboard').classList.add('active');
             updateUserInfo();
             loadUserQuestions();
             startRealTimeListeners();
-            
-            // حفظ حالة الدخول في localStorage
-            localStorage.setItem('ayn_last_login', new Date().toISOString());
+            hideLoading();
         }
         
         function updateUserInfo() {
             if (!studentSystem.currentUser) return;
             
             document.getElementById('userName').textContent = `مرحباً، ${studentSystem.currentUser.name}`;
-            
-            if (studentSystem.currentUser.phone) {
-                document.getElementById('userPhone').textContent = `رقم الواتساب: ${studentSystem.currentUser.phone}`;
-            } else {
-                document.getElementById('userPhone').textContent = 'لم يتم إضافة رقم واتساب';
-            }
+            document.getElementById('userPhone').textContent = studentSystem.currentUser.phone ? 
+                `رقم الواتساب: ${studentSystem.currentUser.phone}` : 'لم يتم إضافة رقم واتساب';
             
             const userAvatar = document.getElementById('userAvatar');
             userAvatar.textContent = studentSystem.currentUser.name.charAt(0).toUpperCase();
         }
         
-        async function loadUserQuestions(filter = 'all') {
-            try {
-                const questions = await studentSystem.getStudentQuestions();
+        function loadUserQuestions(filter = 'all') {
+            studentSystem.getStudentQuestions().then(questions => {
                 renderQuestionsList(questions, filter);
-            } catch (error) {
+            }).catch(error => {
                 console.error('خطأ في تحميل الأسئلة:', error);
-            }
+            });
         }
         
         function renderQuestionsList(questions, filter = 'all') {
@@ -2003,7 +1945,6 @@
         
         async function openQuestionModal(questionId) {
             try {
-                showLoading();
                 const question = await studentSystem.getQuestionById(questionId);
                 
                 const date = question.createdAt ? new Date(question.createdAt.toDate ? question.createdAt.toDate() : question.createdAt) : new Date();
@@ -2037,9 +1978,7 @@
                 }
                 
                 document.getElementById('questionModal').classList.add('show');
-                hideLoading();
             } catch (error) {
-                hideLoading();
                 showNotification('خطأ', error.message, 'error');
             }
         }
@@ -2061,26 +2000,14 @@
         }
 
         // ==================== تهيئة الصفحة ====================
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            showLoading();
+            setTimeout(() => {
+                hideLoading();
+            }, 500);
             
-            // التحقق من آخر دخول
-            const lastLogin = localStorage.getItem('ayn_last_login');
-            if (lastLogin) {
-                const lastLoginDate = new Date(lastLogin);
-                const now = new Date();
-                const hoursDiff = Math.abs(now - lastLoginDate) / 36e5;
-                
-                // إذا مرت أكثر من 24 ساعة منذ آخر دخول، نطلب إعادة تسجيل الدخول
-                if (hoursDiff > 24) {
-                    localStorage.removeItem('ayn_last_login');
-                    await auth.signOut();
-                }
-            }
-            
-            await checkAuthState();
+            checkAuthState();
             
             document.getElementById('questionTitle').addEventListener('input', function() {
                 const length = this.value.length;
@@ -2104,19 +2031,6 @@
                     document.getElementById('contentCharCount').classList.remove('warning');
                     this.classList.remove('error');
                 }
-            });
-            
-            // تقييد إدخال الأرقام فقط في حقول الهواتف
-            document.querySelectorAll('.phone-input').forEach(input => {
-                input.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^\d]/g, '').substring(0, 8);
-                });
-                
-                input.addEventListener('keydown', function(e) {
-                    if (!/[0-9]|Backspace|Delete|Tab|ArrowLeft|ArrowRight/.test(e.key)) {
-                        e.preventDefault();
-                    }
-                });
             });
             
             document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
@@ -2162,7 +2076,7 @@
                 
                 if (result.success) {
                     showNotification('نجاح', 'تم تسجيل الدخول بنجاح', 'success');
-                    await showStudentDashboard();
+                    showStudentDashboard();
                 } else {
                     showNotification('خطأ', result.message, 'error');
                 }
@@ -2178,7 +2092,7 @@
                 const username = document.getElementById('registerUsername').value.trim();
                 const password = document.getElementById('registerPassword').value;
                 const confirmPassword = document.getElementById('registerConfirmPassword').value;
-                const phoneDigits = document.getElementById('registerPhone').value.trim();
+                const phone = document.getElementById('registerPhone').value.trim();
                 
                 document.querySelectorAll('#registerForm .error-message').forEach(el => {
                     el.style.display = 'none';
@@ -2218,8 +2132,8 @@
                     hasError = true;
                 }
                 
-                if (phoneDigits && !studentSystem.validatePhoneDigits(phoneDigits)) {
-                    document.getElementById('registerPhoneError').textContent = 'يجب إدخال 8 أرقام فقط لرقم الواتساب';
+                if (phone && !studentSystem.validateMauritanianPhone(phone)) {
+                    document.getElementById('registerPhoneError').textContent = 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)';
                     document.getElementById('registerPhoneError').style.display = 'block';
                     hasError = true;
                 }
@@ -2235,7 +2149,7 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الحساب...';
                 
-                const result = await studentSystem.registerStudent(name, username, password, phoneDigits);
+                const result = await studentSystem.registerStudent(name, username, password, phone);
                 
                 if (result.success) {
                     showNotification('نجاح', 'تم إنشاء الحساب بنجاح', 'success');
@@ -2245,7 +2159,7 @@
                         const loginResult = await studentSystem.loginStudent(username, password);
                         if (loginResult.success) {
                             showNotification('تم التسجيل', 'تم تسجيل دخولك تلقائياً', 'success');
-                            await showStudentDashboard();
+                            showStudentDashboard();
                         } else {
                             document.querySelector('[data-tab="login"]').click();
                             document.getElementById('loginUsername').value = username;
@@ -2270,7 +2184,7 @@
                 
                 const subject = document.getElementById('questionSubject').value;
                 const title = document.getElementById('questionTitle').value.trim();
-                const whatsappDigits = document.getElementById('questionWhatsapp').value.trim();
+                const whatsappNumber = document.getElementById('questionWhatsapp').value.trim();
                 const question = document.getElementById('questionContent').value.trim();
                 
                 if (!subject) {
@@ -2286,11 +2200,11 @@
                     return;
                 }
                 
-                if (whatsappDigits && !studentSystem.validatePhoneDigits(whatsappDigits)) {
-                    document.getElementById('whatsappError').textContent = 'يجب إدخال 8 أرقام فقط لرقم الواتساب';
+                if (whatsappNumber && !studentSystem.validateMauritanianPhone(whatsappNumber)) {
+                    document.getElementById('whatsappError').textContent = 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)';
                     document.getElementById('whatsappError').style.display = 'block';
                     document.getElementById('questionWhatsapp').classList.add('error');
-                    showNotification('خطأ', 'يجب إدخال 8 أرقام فقط لرقم الواتساب', 'error');
+                    showNotification('خطأ', 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)', 'error');
                     return;
                 }
                 
@@ -2300,7 +2214,7 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
                 
-                const result = await studentSystem.submitQuestion(subject, title, question, whatsappDigits);
+                const result = await studentSystem.submitQuestion(subject, title, question, whatsappNumber);
                 
                 if (result.success) {
                     document.getElementById('successModal').classList.add('show');
@@ -2314,7 +2228,7 @@
                     document.getElementById('questionWhatsapp').classList.remove('error');
                     
                     const activeFilter = document.querySelector('.questions-tab.active').dataset.filter;
-                    await loadUserQuestions(activeFilter);
+                    loadUserQuestions(activeFilter);
                 } else {
                     showNotification('خطأ', result.message, 'error');
                 }
@@ -2327,7 +2241,7 @@
                 if (!studentSystem.currentUser) return;
                 
                 document.getElementById('accountName').value = studentSystem.currentUser.name;
-                document.getElementById('accountPhone').value = studentSystem.currentUser.phoneDigits || '';
+                document.getElementById('accountPhone').value = studentSystem.currentUser.phone || '';
                 document.getElementById('accountNewPassword').value = '';
                 document.getElementById('accountModal').classList.add('show');
             });
@@ -2336,10 +2250,10 @@
                 e.preventDefault();
                 
                 const name = document.getElementById('accountName').value.trim();
-                const phoneDigits = document.getElementById('accountPhone').value.trim();
+                const phone = document.getElementById('accountPhone').value.trim();
                 const newPassword = document.getElementById('accountNewPassword').value;
                 
-                const updates = { name, phoneDigits };
+                const updates = { name, phone };
                 if (newPassword) {
                     updates.password = newPassword;
                 }
@@ -2360,7 +2274,6 @@
                     const result = await studentSystem.logoutStudent();
                     
                     if (result.success) {
-                        localStorage.removeItem('ayn_last_login');
                         document.getElementById('studentDashboard').classList.remove('active');
                         document.getElementById('loginContainer').classList.add('active');
                         document.getElementById('loginUsername').value = '';
@@ -2418,29 +2331,14 @@
                 }
             });
             
-            // استعادة الجلسة عند تحديث الصفحة
-            window.addEventListener('beforeunload', function() {
+            window.addEventListener('popstate', function(event) {
                 if (studentSystem.currentUser) {
-                    localStorage.setItem('ayn_last_login', new Date().toISOString());
+                    history.pushState(null, null, window.location.href);
                 }
             });
             
-            // إعادة تحميل البيانات عند الرجوع للصفحة
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted) {
-                    location.reload();
-                }
-            });
-            
-            // منع التخزين المؤقت للصفحة
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        registration.unregister();
-                    }
-                });
-            }
+            history.pushState(null, null, window.location.href);
         });
     </script>
 </body>
-    </html>
+</html>
