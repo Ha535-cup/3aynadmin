@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
-        :root {
+       :root {
             --primary: #2c5aa0;
             --primary-light: #4a7bc1;
             --primary-dark: #1d3d6f;
@@ -1397,23 +1397,23 @@
     </footer>
 
     <script>
-        // بيانات مشروعك التي استخرجتها
-const firebaseConfig = {
-  apiKey: "AIzaSyDbM7Ctn_EKQBauI3aMbV3lcrkni_qFtnU",
-  authDomain: "eyn-4a521.firebaseapp.com",
-  projectId: "eyn-4a521",
-  storageBucket: "eyn-4a521.firebasestorage.app",
-  messagingSenderId: "842348200480",
-  appId: "1:842348200480:web:9c75834517331da4e2f245",
-  measurementId: "G-SS74B2WPX2"
-};
+        // بيانات مشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDbM7Ctn_EKQBauI3aMbV3lcrkni_qFtnU",
+            authDomain: "eyn-4a521.firebaseapp.com",
+            projectId: "eyn-4a521",
+            storageBucket: "eyn-4a521.firebasestorage.app",
+            messagingSenderId: "842348200480",
+            appId: "1:842348200480:web:9c75834517331da4e2f245",
+            measurementId: "G-SS74B2WPX2"
+        };
 
-// تهيئة فيربيس بالطريقة المتوافقة مع ملفاتك الحالية
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const db = firebase.firestore();
-const auth = firebase.auth(); // هذا السطر تحتاجه في ملف الطالب index1.html
+        // تهيئة فيربيس
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
         class FirebaseStudentSystem {
             constructor() {
@@ -1639,6 +1639,7 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                     
                     const questionRef = await this.db.collection('questions').add(questionData);
                     
+                    // إضافة إشعار للمشرف
                     await this.db.collection('notifications').add({
                         userId: this.currentUser.uid,
                         title: 'سؤال جديد',
@@ -1646,6 +1647,16 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                         read: false,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         type: 'admin'
+                    });
+                    
+                    // إضافة إشعار للطالب
+                    await this.db.collection('notifications').add({
+                        userId: this.currentUser.uid,
+                        title: 'تم استلام سؤالك',
+                        message: `تم استلام سؤالك في مادة ${subject} وسيتم الرد عليك قريباً`,
+                        read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        type: 'student'
                     });
                     
                     return { 
@@ -1668,15 +1679,54 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                     
                     const snapshot = await this.db.collection('questions')
                         .where('userId', '==', this.currentUser.uid)
-                        .orderBy('createdAt', 'desc')
                         .get();
                     
-                    return snapshot.docs.map(doc => ({
+                    const questions = snapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     }));
+                    
+                    // ترتيب يدوي
+                    questions.sort((a, b) => {
+                        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                        return dateB - dateA;
+                    });
+                    
+                    return questions;
                 } catch (error) {
                     console.error('خطأ في جلب أسئلة الطالب:', error);
+                    
+                    // إذا كان الخطأ بسبب الفهرس، حاول بطريقة مختلفة
+                    if (error.code === 'failed-precondition') {
+                        console.log('جرب جلب البيانات بدون ترتيب...');
+                        return this.getStudentQuestionsSimple();
+                    }
+                    
+                    return [];
+                }
+            }
+            
+            // طريقة بديلة لجلب الأسئلة
+            async getStudentQuestionsSimple() {
+                try {
+                    if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
+                    
+                    const snapshot = await this.db.collection('questions').get();
+                    
+                    // فلترة يدوية على جانب العميل
+                    const questions = snapshot.docs
+                        .map(doc => ({ id: doc.id, ...doc.data() }))
+                        .filter(q => q.userId === this.currentUser.uid)
+                        .sort((a, b) => {
+                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                            return dateB - dateA;
+                        });
+                    
+                    return questions;
+                } catch (error) {
+                    console.error('خطأ في جلب الأسئلة البسيط:', error);
                     return [];
                 }
             }
@@ -1707,17 +1757,62 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                     this.unsubscribeQuestions();
                 }
                 
+                // استعلام مبسط بدون orderBy أولي
                 this.unsubscribeQuestions = this.db.collection('questions')
                     .where('userId', '==', this.currentUser.uid)
-                    .orderBy('createdAt', 'desc')
                     .onSnapshot(snapshot => {
                         const questions = snapshot.docs.map(doc => ({
                             id: doc.id,
                             ...doc.data()
                         }));
+                        
+                        // الترتيب يدوياً على جانب العميل
+                        questions.sort((a, b) => {
+                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                            return dateB - dateA; // ترتيب تنازلي
+                        });
+                        
                         callback(questions);
                     }, error => {
                         console.error('خطأ في مستمع الأسئلة:', error);
+                        
+                        // إذا كان الخطأ بسبب الفهرس، حاول مرة أخرى بدون ترتيب
+                        if (error.code === 'failed-precondition') {
+                            console.log('جرب استعلاماً مختلفاً...');
+                            this.setupSimpleQuestionsListener(callback);
+                        }
+                    });
+                    
+                return this.unsubscribeQuestions;
+            }
+            
+            // دالة بديلة بسيطة بدون orderBy
+            setupSimpleQuestionsListener(callback) {
+                if (!this.currentUser) return null;
+                
+                if (this.unsubscribeQuestions) {
+                    this.unsubscribeQuestions();
+                }
+                
+                this.unsubscribeQuestions = this.db.collection('questions')
+                    .where('userId', '==', this.currentUser.uid)
+                    .onSnapshot(snapshot => {
+                        const questions = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        
+                        // ترتيب يدوي
+                        questions.sort((a, b) => {
+                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                            return dateB - dateA;
+                        });
+                        
+                        callback(questions);
+                    }, error => {
+                        console.error('خطأ في المستمع البسيط:', error);
                     });
                     
                 return this.unsubscribeQuestions;
@@ -1732,13 +1827,19 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                 
                 this.unsubscribeNotifications = this.db.collection('notifications')
                     .where('userId', '==', this.currentUser.uid)
-                    .orderBy('timestamp', 'desc')
-                    .limit(10)
                     .onSnapshot(snapshot => {
                         const notifications = snapshot.docs.map(doc => ({
                             id: doc.id,
                             ...doc.data()
                         }));
+                        
+                        // ترتيب يدوي
+                        notifications.sort((a, b) => {
+                            const dateA = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp || 0);
+                            const dateB = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp || 0);
+                            return dateB - dateA;
+                        });
+                        
                         callback(notifications);
                     }, error => {
                         console.error('خطأ في مستمع الإشعارات:', error);
@@ -1990,7 +2091,7 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
             
             studentSystem.setupNotificationsListener(notifications => {
                 notifications.forEach(notification => {
-                    if (!notification.read) {
+                    if (!notification.read && notification.type === 'student') {
                         showNotification(notification.title, notification.message, 'success');
                         studentSystem.markNotificationAsRead(notification.id);
                     }
@@ -2006,6 +2107,10 @@ const auth = firebase.auth(); // هذا السطر تحتاجه في ملف ال
                 hideLoading();
             }, 500);
             
+            checkAuthState();
+            
+            // جميع المستمعين للأحداث يبقون كما هم
+            // ... (الكود المتبقي يبقى كما هو تماماً)
             checkAuthState();
             
             document.getElementById('questionTitle').addEventListener('input', function() {
