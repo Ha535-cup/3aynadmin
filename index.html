@@ -1397,7 +1397,7 @@
     </footer>
 
     <script>
-        // ==================== تهيئة Firebase مع الإعدادات الجديدة ====================
+        // ==================== تهيئة Firebase ====================
         const firebaseConfig = {
             apiKey: "AIzaSyD7xmZ6lDgkxAwaVjdBetbRwOChIoe1juQ",
             authDomain: "ayn-5b88a.firebaseapp.com",
@@ -1407,7 +1407,11 @@
             appId: "1:733682854335:web:a06b02292ac21eebb8990a"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // تهيئة Firebase مع التحقق من عدم التهيئة المزدوجة
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
         const auth = firebase.auth();
         const db = firebase.firestore();
 
@@ -1419,18 +1423,18 @@
                 this.unsubscribeQuestions = null;
                 this.unsubscribeNotifications = null;
                 
-                // تهيئة استمرارية المصادقة
                 this.initAuthPersistence();
             }
             
             initAuthPersistence() {
-                // تعيين استمرارية المصادقة إلى LOCAL (يبقى مسجلاً بعد إغلاق المتصفح)
-                this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                return this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                     .then(() => {
                         console.log('تم تعيين استمرارية المصادقة إلى LOCAL');
+                        return true;
                     })
                     .catch((error) => {
                         console.error('خطأ في تعيين استمرارية المصادقة:', error);
+                        return false;
                     });
             }
             
@@ -1443,12 +1447,12 @@
                     'auth/user-disabled': 'هذا الحساب معطل',
                     'auth/user-not-found': 'اسم المستخدم غير موجود',
                     'auth/wrong-password': 'كلمة المرور غير صحيحة',
-                    'auth/too-many-requests': 'تم تجاوز عدد المحاولات، حاول لاحقاً'
+                    'auth/too-many-requests': 'تم تجاوز عدد المحاولات، حاول لاحقاً',
+                    'auth/network-request-failed': 'فشل الاتصال بالشبكة، تحقق من اتصالك بالإنترنت'
                 };
                 return messages[errorCode] || 'حدث خطأ غير متوقع';
             }
             
-            // تحويل اسم المستخدم إلى بريد إلكتروني صالح لـ Firebase
             usernameToEmail(username) {
                 let email = username.trim().toLowerCase();
                 email = email.replace(/\s+/g, '.');
@@ -1456,9 +1460,18 @@
                 return email + '@ayn.student';
             }
             
+            validateMauritanianPhone(phone) {
+                if (!phone) return true;
+                const phoneRegex = /^222\d{8}$/;
+                return phoneRegex.test(phone);
+            }
+            
             async registerStudent(name, username, password, phone = '') {
                 try {
-                    // تحقق من صحة رقم الواتساب الموريتاني
+                    if (!navigator.onLine) {
+                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
+                    }
+                    
                     if (phone && !this.validateMauritanianPhone(phone)) {
                         return { 
                             success: false, 
@@ -1476,11 +1489,22 @@
                         email: email,
                         phone: phone || '',
                         role: 'student',
-                        createdAt: new Date().toISOString(),
-                        lastLogin: new Date().toISOString()
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    this.currentUser = { uid: user.uid, name, username, email, phone, role: 'student' };
+                    this.currentUser = { 
+                        uid: user.uid, 
+                        name, 
+                        username, 
+                        email, 
+                        phone, 
+                        role: 'student',
+                        updatePassword: function(password) {
+                            return user.updatePassword(password);
+                        }
+                    };
+                    
                     return { success: true, user: this.currentUser };
                 } catch (error) {
                     console.error('خطأ في التسجيل:', error);
@@ -1491,24 +1515,30 @@
                 }
             }
             
-            validateMauritanianPhone(phone) {
-                if (!phone) return true;
-                const phoneRegex = /^222\d{8}$/;
-                return phoneRegex.test(phone);
-            }
-            
             async loginStudent(username, password) {
                 try {
+                    if (!navigator.onLine) {
+                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
+                    }
+                    
                     const email = this.usernameToEmail(username);
                     const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
                     
                     await this.db.collection('users').doc(user.uid).update({
-                        lastLogin: new Date().toISOString()
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
                     const userDoc = await this.db.collection('users').doc(user.uid).get();
-                    this.currentUser = { uid: user.uid, ...userDoc.data() };
+                    const userData = userDoc.data();
+                    
+                    this.currentUser = { 
+                        uid: user.uid, 
+                        ...userData,
+                        updatePassword: function(password) {
+                            return user.updatePassword(password);
+                        }
+                    };
                     
                     return { success: true, user: this.currentUser };
                 } catch (error) {
@@ -1522,11 +1552,18 @@
             
             async logoutStudent() {
                 try {
-                    if (this.unsubscribeQuestions) this.unsubscribeQuestions();
-                    if (this.unsubscribeNotifications) this.unsubscribeNotifications();
+                    if (this.unsubscribeQuestions) {
+                        this.unsubscribeQuestions();
+                        this.unsubscribeQuestions = null;
+                    }
+                    if (this.unsubscribeNotifications) {
+                        this.unsubscribeNotifications();
+                        this.unsubscribeNotifications = null;
+                    }
                     
                     await this.auth.signOut();
                     this.currentUser = null;
+                    
                     return { success: true };
                 } catch (error) {
                     console.error('خطأ في تسجيل الخروج:', error);
@@ -1538,7 +1575,6 @@
                 try {
                     if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
                     
-                    // تحقق من صحة رقم الواتساب الموريتاني
                     if (updates.phone && !this.validateMauritanianPhone(updates.phone)) {
                         return { 
                             success: false, 
@@ -1546,15 +1582,17 @@
                         };
                     }
                     
-                    // إذا كان هناك كلمة مرور جديدة، قم بتحديثها في Firebase Auth
-                    if (updates.password) {
-                        await this.currentUser.updatePassword(updates.password);
+                    const user = this.auth.currentUser;
+                    
+                    if (updates.password && user) {
+                        await user.updatePassword(updates.password);
                         delete updates.password;
                     }
                     
                     await this.db.collection('users').doc(this.currentUser.uid).update(updates);
                     
                     this.currentUser = { ...this.currentUser, ...updates };
+                    
                     return { success: true, user: this.currentUser };
                 } catch (error) {
                     console.error('خطأ في تحديث بيانات الطالب:', error);
@@ -1566,7 +1604,10 @@
                 try {
                     if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
                     
-                    // تحقق من صحة رقم الواتساب الموريتاني
+                    if (!navigator.onLine) {
+                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
+                    }
+                    
                     if (whatsapp && !this.validateMauritanianPhone(whatsapp)) {
                         return { 
                             success: false, 
@@ -1574,16 +1615,25 @@
                         };
                     }
                     
+                    const finalWhatsapp = whatsapp || this.currentUser.phone || '';
+                    
+                    if (!finalWhatsapp) {
+                        return {
+                            success: false,
+                            message: 'الرجاء إدخال رقم واتساب موريتاني للإجابة على سؤالك'
+                        };
+                    }
+                    
                     const questionData = {
                         userId: this.currentUser.uid,
                         userName: this.currentUser.name,
-                        userPhone: whatsapp || this.currentUser.phone || '',
+                        userPhone: finalWhatsapp,
                         subject: subject,
                         title: title || '',
                         question: content,
                         answer: '',
                         status: 'pending',
-                        createdAt: new Date().toISOString(),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         answeredAt: null
                     };
                     
@@ -1594,7 +1644,7 @@
                         title: 'سؤال جديد',
                         message: `سؤال جديد من ${this.currentUser.name} في مادة ${subject}`,
                         read: false,
-                        timestamp: new Date().toISOString(),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         type: 'admin'
                     });
                     
@@ -1605,7 +1655,10 @@
                     };
                 } catch (error) {
                     console.error('خطأ في إرسال السؤال:', error);
-                    return { success: false, message: error.message };
+                    return { 
+                        success: false, 
+                        message: `حدث خطأ: ${error.message}` 
+                    };
                 }
             }
             
@@ -1650,6 +1703,10 @@
             setupQuestionsListener(callback) {
                 if (!this.currentUser) return null;
                 
+                if (this.unsubscribeQuestions) {
+                    this.unsubscribeQuestions();
+                }
+                
                 this.unsubscribeQuestions = this.db.collection('questions')
                     .where('userId', '==', this.currentUser.uid)
                     .orderBy('createdAt', 'desc')
@@ -1659,6 +1716,8 @@
                             ...doc.data()
                         }));
                         callback(questions);
+                    }, error => {
+                        console.error('خطأ في مستمع الأسئلة:', error);
                     });
                     
                 return this.unsubscribeQuestions;
@@ -1666,6 +1725,10 @@
             
             setupNotificationsListener(callback) {
                 if (!this.currentUser) return null;
+                
+                if (this.unsubscribeNotifications) {
+                    this.unsubscribeNotifications();
+                }
                 
                 this.unsubscribeNotifications = this.db.collection('notifications')
                     .where('userId', '==', this.currentUser.uid)
@@ -1677,6 +1740,8 @@
                             ...doc.data()
                         }));
                         callback(notifications);
+                    }, error => {
+                        console.error('خطأ في مستمع الإشعارات:', error);
                     });
                     
                 return this.unsubscribeNotifications;
@@ -1758,22 +1823,35 @@
         
         function checkAuthState() {
             auth.onAuthStateChanged(async (user) => {
+                console.log('حالة المصادقة:', user ? 'تم تسجيل الدخول' : 'لم يتم تسجيل الدخول');
+                
                 if (user) {
                     showLoading();
                     try {
                         const userDoc = await db.collection('users').doc(user.uid).get();
                         if (userDoc.exists && userDoc.data().role === 'student') {
-                            studentSystem.currentUser = { uid: user.uid, ...userDoc.data() };
+                            studentSystem.currentUser = { 
+                                uid: user.uid, 
+                                ...userDoc.data(),
+                                updatePassword: function(password) {
+                                    return user.updatePassword(password);
+                                }
+                            };
                             showStudentDashboard();
                         } else {
-                            // إذا كان المستخدم ليس طالباً، قم بتسجيل الخروج
                             await auth.signOut();
+                            studentSystem.currentUser = null;
+                            hideLoading();
                         }
                     } catch (error) {
                         console.error('خطأ في التحقق من حالة المستخدم:', error);
-                    } finally {
                         hideLoading();
                     }
+                } else {
+                    studentSystem.currentUser = null;
+                    document.getElementById('loginContainer').classList.add('active');
+                    document.getElementById('studentDashboard').classList.remove('active');
+                    hideLoading();
                 }
             });
         }
@@ -1784,6 +1862,7 @@
             updateUserInfo();
             loadUserQuestions();
             startRealTimeListeners();
+            hideLoading();
         }
         
         function updateUserInfo() {
@@ -1829,7 +1908,7 @@
                 questionItem.className = `question-item ${question.status}`;
                 questionItem.dataset.id = question.id;
                 
-                const date = new Date(question.createdAt);
+                const date = question.createdAt ? new Date(question.createdAt.toDate ? question.createdAt.toDate() : question.createdAt) : new Date();
                 const dateString = date.toLocaleDateString('ar-SA');
                 const timeString = date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                 
@@ -1867,7 +1946,7 @@
             try {
                 const question = await studentSystem.getQuestionById(questionId);
                 
-                const date = new Date(question.createdAt);
+                const date = question.createdAt ? new Date(question.createdAt.toDate ? question.createdAt.toDate() : question.createdAt) : new Date();
                 const dateString = date.toLocaleDateString('ar-SA', { 
                     year: 'numeric', 
                     month: 'long', 
@@ -1889,7 +1968,7 @@
                     answerSection.style.display = 'block';
                     document.getElementById('modalAnswer').textContent = question.answer;
                     
-                    const answerDate = question.answeredAt ? new Date(question.answeredAt) : date;
+                    const answerDate = question.answeredAt ? new Date(question.answeredAt.toDate ? question.answeredAt.toDate() : question.answeredAt) : date;
                     const answerDateString = answerDate.toLocaleDateString('ar-SA');
                     const answerTimeString = answerDate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                     document.getElementById('modalAnswerDate').textContent = `${answerDateString} - ${answerTimeString}`;
@@ -1921,18 +2000,14 @@
 
         // ==================== تهيئة الصفحة ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // تحديث السنة الحالية في التذييل
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // إخفاء شاشة التحميل بعد نصف ثانية
             setTimeout(() => {
                 hideLoading();
             }, 500);
             
-            // تحقق من حالة المصادقة
             checkAuthState();
             
-            // أحداث حقل عنوان السؤال
             document.getElementById('questionTitle').addEventListener('input', function() {
                 const length = this.value.length;
                 document.getElementById('titleCharCount').textContent = `${length}/100`;
@@ -1945,7 +2020,6 @@
                 }
             });
             
-            // أحداث حقل نص السؤال
             document.getElementById('questionContent').addEventListener('input', function() {
                 const length = this.value.length;
                 document.getElementById('contentCharCount').textContent = `${length}/1500`;
@@ -1958,7 +2032,6 @@
                 }
             });
             
-            // تسجيل الدخول
             document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -2011,7 +2084,6 @@
                 submitBtn.innerHTML = originalText;
             });
             
-            // التسجيل
             document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -2081,10 +2153,18 @@
                 if (result.success) {
                     showNotification('نجاح', 'تم إنشاء الحساب بنجاح', 'success');
                     document.getElementById('registerFormElement').reset();
-                    document.querySelector('.login-tab.active').click();
-                    document.getElementById('loginUsername').value = username;
-                    document.getElementById('loginPassword').value = password;
-                    showNotification('تم التسجيل', 'الرجاء تسجيل الدخول الآن', 'info');
+                    
+                    setTimeout(async () => {
+                        const loginResult = await studentSystem.loginStudent(username, password);
+                        if (loginResult.success) {
+                            showNotification('تم التسجيل', 'تم تسجيل دخولك تلقائياً', 'success');
+                            showStudentDashboard();
+                        } else {
+                            document.querySelector('[data-tab="login"]').click();
+                            document.getElementById('loginUsername').value = username;
+                            document.getElementById('loginPassword').value = password;
+                        }
+                    }, 1000);
                 } else {
                     showNotification('خطأ', result.message, 'error');
                 }
@@ -2093,7 +2173,6 @@
                 submitBtn.innerHTML = originalText;
             });
             
-            // إرسال سؤال
             document.getElementById('questionForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -2157,7 +2236,6 @@
                 submitBtn.innerHTML = originalText;
             });
             
-            // إدارة الحساب
             document.getElementById('accountBtn').addEventListener('click', function() {
                 if (!studentSystem.currentUser) return;
                 
@@ -2167,7 +2245,6 @@
                 document.getElementById('accountModal').classList.add('show');
             });
             
-            // تحديث بيانات الحساب
             document.getElementById('accountForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -2191,7 +2268,6 @@
                 }
             });
             
-            // تسجيل الخروج
             document.getElementById('logoutBtn').addEventListener('click', async function() {
                 if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
                     const result = await studentSystem.logoutStudent();
@@ -2206,7 +2282,6 @@
                 }
             });
             
-            // تبديل علامات التبويب في تسجيل الدخول/التسجيل
             document.querySelectorAll('.login-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.dataset.tab;
@@ -2219,7 +2294,6 @@
                 });
             });
             
-            // تبديل علامات التبويب في الأسئلة
             document.querySelectorAll('.questions-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.questions-tab').forEach(t => t.classList.remove('active'));
@@ -2228,7 +2302,6 @@
                 });
             });
             
-            // إغلاق النوافذ
             document.getElementById('closeAccountModal').addEventListener('click', function() {
                 document.getElementById('accountModal').classList.remove('show');
             });
@@ -2251,21 +2324,18 @@
                 }
             });
             
-            // إضافة مستمع حدث للضغط على Enter في حقل كلمة المرور لتسجيل الدخول
             document.getElementById('loginPassword')?.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     document.getElementById('loginSubmitBtn').click();
                 }
             });
             
-            // منع الرجوع إلى الخلف بعد تسجيل الدخول
             window.addEventListener('popstate', function(event) {
                 if (studentSystem.currentUser) {
                     history.pushState(null, null, window.location.href);
                 }
             });
             
-            // إضافة حالة للتاريخ لمنع الرجوع
             history.pushState(null, null, window.location.href);
         });
     </script>
