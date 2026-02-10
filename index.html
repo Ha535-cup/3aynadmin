@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,10 +7,9 @@
     <title>منصة عين التعليمية - الطالب</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
-       :root {
+        :root {
             --primary: #2c5aa0;
             --primary-light: #4a7bc1;
             --primary-dark: #1d3d6f;
@@ -282,45 +282,15 @@
             border: 1px solid rgba(44, 90, 160, 0.1);
         }
 
-        .login-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--gray-light);
-            padding-bottom: 10px;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 15px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--gray);
-            transition: var(--transition);
-            font-size: 16px;
-        }
-
-        .login-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .login-form {
-            display: none;
-        }
-
-        .login-form.active {
-            display: block;
-        }
-
-        .login-form h3 {
+        .login-card h2 {
             color: var(--primary);
             margin-bottom: 25px;
             text-align: center;
             font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
         .student-dashboard {
@@ -939,37 +909,6 @@
             font-weight: 700;
         }
 
-        .subject-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .subject-btn {
-            padding: 15px;
-            background: white;
-            border: 2px solid var(--gray-light);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .subject-btn:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .subject-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            border-color: var(--primary);
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 0 15px;
@@ -1012,10 +951,6 @@
             .modal-body {
                 padding: 25px 20px;
             }
-            
-            .subject-selector {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
         @media (max-width: 480px) {
@@ -1032,10 +967,6 @@
                 font-size: 16px;
             }
             
-            .login-tabs {
-                flex-direction: column;
-            }
-            
             .user-header .actions {
                 flex-direction: column;
                 gap: 10px;
@@ -1044,10 +975,6 @@
             .account-btn, .logout-btn {
                 width: 100%;
                 justify-content: center;
-            }
-            
-            .subject-selector {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1066,102 +993,32 @@
         <p class="tagline">منصة تعليمية متكاملة للإجابة على استفسارات الطلاب بكل خصوصية وسرية تامة، نضمن لك الحصول على إجابات دقيقة من خبراء متخصصين</p>
     </header>
 
+    <!-- شاشة الدخول باسم الطالب فقط -->
     <div class="login-container active" id="loginContainer">
         <div class="container">
             <div class="login-card">
-                <div class="login-tabs">
-                    <button class="login-tab active" data-tab="login">تسجيل الدخول</button>
-                    <button class="login-tab" data-tab="register">إنشاء حساب</button>
-                </div>
-                
-                <div class="login-form active" id="loginForm">
-                    <h3>تسجيل الدخول</h3>
-                    <form id="loginFormElement">
-                        <div class="form-group">
-                            <label for="loginUsername">اسم المستخدم</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-user"></i>
-                                <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم" required>
-                            </div>
-                            <div class="error-message" id="loginUsernameError">الرجاء إدخال اسم المستخدم</div>
+                <h2><i class="fas fa-sign-in-alt"></i>أدخل اسمك للبدء</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="studentName">اسم الطالب</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="studentName" placeholder="أدخل اسمك" required>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="loginPassword">كلمة المرور</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required minlength="6">
-                            </div>
-                            <div class="error-message" id="loginPasswordError">الرجاء إدخال كلمة مرور صحيحة</div>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn" id="loginSubmitBtn">
-                            <i class="fas fa-sign-in-alt"></i>
-                            تسجيل الدخول
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="login-form" id="registerForm">
-                    <h3>إنشاء حساب جديد</h3>
-                    <form id="registerFormElement">
-                        <div class="form-group">
-                            <label for="registerName">اسم الطالب</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-user"></i>
-                                <input type="text" id="registerName" placeholder="أدخل اسمك الكامل" required>
-                            </div>
-                            <div class="error-message" id="registerNameError">الرجاء إدخال الاسم</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="registerUsername">اسم المستخدم</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-at"></i>
-                                <input type="text" id="registerUsername" placeholder="اختر اسم مستخدم" required>
-                            </div>
-                            <div class="error-message" id="registerUsernameError">الرجاء إدخال اسم مستخدم</div>
-                            <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">ستستخدم هذا الاسم لتسجيل الدخول</p>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="registerPassword">كلمة المرور</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="registerPassword" placeholder="اختر كلمة مرور قوية" required minlength="6">
-                            </div>
-                            <div class="error-message" id="registerPasswordError">كلمة المرور يجب أن تكون 6 أحرف على الأقل</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="registerConfirmPassword">تأكيد كلمة المرور</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="registerConfirmPassword" placeholder="أعد إدخال كلمة المرور" required minlength="6">
-                            </div>
-                            <div class="error-message" id="registerConfirmError">كلمات المرور غير متطابقة</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="registerPhone">رقم الواتساب الموريتاني (8 أرقام)</label>
-                            <div class="input-with-icon">
-                                <i class="fab fa-whatsapp"></i>
-                                <input type="tel" id="registerPhone" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
-                            </div>
-                            <div class="error-message" id="registerPhoneError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
-                            <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">يمكنك إضافة رقم واتساب لاحقاً من إعدادات الحساب للتواصل مع المشرفين</p>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn" id="registerSubmitBtn">
-                            <i class="fas fa-user-plus"></i>
-                            إنشاء حساب
-                        </button>
-                    </form>
-                </div>
+                        <div class="error-message" id="nameError">الرجاء إدخال اسمك</div>
+                        <p style="color: var(--gray); font-size: 14px; margin-top: 8px; line-height: 1.5;">سيتم حفظ اسمك لتسهيل عملية التواصل معك</p>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="loginSubmitBtn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        الدخول
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- لوحة الطالب -->
     <div class="student-dashboard" id="studentDashboard">
         <div class="container">
             <div class="user-header">
@@ -1169,14 +1026,10 @@
                     <div class="user-avatar" id="userAvatar">ط</div>
                     <div class="user-details">
                         <h3 id="userName">مرحباً، الطالب</h3>
-                        <p id="userPhone">لم يتم إضافة رقم واتساب</p>
+                        <p>منصة عين التعليمية</p>
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="account-btn" id="accountBtn">
-                        <i class="fas fa-user-cog"></i>
-                        إدارة الحساب
-                    </button>
                     <button class="logout-btn" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                         تسجيل خروج
@@ -1190,33 +1043,10 @@
                 
                 <form id="questionForm">
                     <div class="form-group">
-                        <label for="questionSubject">المادة الدراسية</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-book"></i>
-                            <select id="questionSubject" required>
-                                <option value="">اختر المادة الدراسية</option>
-                                <option value="رياضيات">رياضيات</option>
-                                <option value="فيزياء">فيزياء</option>
-                                <option value="كيمياء">كيمياء</option>
-                                <option value="أحياء">أحياء</option>
-                                <option value="لغة عربية">لغة عربية</option>
-                                <option value="لغة إنجليزية">لغة إنجليزية</option>
-                                <option value="فرنسية">فرنسية</option>
-                                <option value="تاريخ">تاريخ</option>
-                                <option value="جغرافيا">جغرافيا</option>
-                                <option value="فلسفة">فلسفة</option>
-                                <option value="علوم إسلامية">علوم إسلامية</option>
-                                <option value="حاسوب">حاسوب</option>
-                                <option value="أخرى">أخرى</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="questionTitle">عنوان السؤال</label>
+                        <label for="questionTitle">عنوان السؤال (اختياري)</label>
                         <div class="input-with-icon">
                             <i class="fas fa-heading"></i>
-                            <input type="text" id="questionTitle" placeholder="أدخل عنواناً مختصراً يوضح سؤالك" required>
+                            <input type="text" id="questionTitle" placeholder="أدخل عنواناً مختصراً يوضح سؤالك">
                         </div>
                         <div class="char-count" id="titleCharCount">0/100</div>
                     </div>
@@ -1232,13 +1062,13 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="questionWhatsapp">رقم واتساب موريتاني (8 أرقام)</label>
+                        <label for="questionWhatsapp">رقم الواتساب (8 أرقام فقط)</label>
                         <div class="input-with-icon">
                             <i class="fab fa-whatsapp"></i>
-                            <input type="tel" id="questionWhatsapp" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
+                            <input type="tel" id="questionWhatsapp" placeholder="مثال: 12345678" maxlength="8" pattern="\d{8}">
                         </div>
-                        <div class="error-message" id="whatsappError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
-                        <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">إذا لم تدخل رقم واتساب، سيتم استخدام الرقم المسجل في حسابك إن وجد</p>
+                        <div class="error-message" id="whatsappError">يجب أن يكون رقم واتساب صحيح (8 أرقام فقط)</div>
+                        <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">سيتم استخدام هذا الرقم للتواصل معك عبر واتساب للرد على سؤالك</p>
                     </div>
                     
                     <button type="submit" class="submit-btn" id="submitBtn">
@@ -1249,7 +1079,7 @@
                 
                 <div class="privacy-notice">
                     <h4><i class="fas fa-shield-alt"></i>خصوصيتك محمية</h4>
-                    <p>جميع استفساراتك تبقى سرية ولا يمكن لأي طالب آخر رؤيتها. سيتم الرد على سؤالك عبر واتساب مباشرةً، ولن نشارك معلوماتك مع أي طرف ثالث. نلتزم بتقديم إجابات دقيقة من قبل مشرفين متخصصين في كل مادة دراسية.</p>
+                    <p>جميع استفساراتك تبقى سرية ولا يمكن لأي طالب آخر رؤيتها. سيتم الرد على سؤالك عبر واتساب مباشرةً، ولن نشارك معلوماتك مع أي طرف ثالث. نلتزم بتقديم إجابات دقيقة من قبل مشرفين متخصصين.</p>
                 </div>
             </div>
 
@@ -1268,57 +1098,7 @@
         </div>
     </div>
 
-    <div class="account-modal" id="accountModal">
-        <div class="account-modal-content">
-            <div class="account-modal-header">
-                <h3><i class="fas fa-user-cog"></i> إدارة الحساب</h3>
-                <button class="close-modal" id="closeAccountModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="accountForm">
-                    <div class="form-group">
-                        <label for="accountName">اسم الطالب</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="accountName" required>
-                        </div>
-                        <div class="error-message" id="accountNameError">الرجاء إدخال الاسم</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="accountPhone">رقم الواتساب الموريتاني (8 أرقام)</label>
-                        <div class="input-with-icon">
-                            <i class="fab fa-whatsapp"></i>
-                            <input type="tel" id="accountPhone" placeholder="مثال: 22212345678" maxlength="11" pattern="222\d{8}">
-                        </div>
-                        <div class="error-message" id="accountPhoneError">يجب أن يكون رقم واتساب موريتاني صحيح (8 أرقام بعد 222)</div>
-                        <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">سيتم استخدام هذا الرقم للرد على أسئلتك</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="accountNewPassword">تغيير كلمة المرور (اختياري)</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="accountNewPassword" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)" minlength="6">
-                        </div>
-                        <div class="error-message" id="accountPasswordError">يجب أن تكون كلمة المرور 6 أحرف على الأقل</div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 15px; margin-top: 35px;">
-                        <button type="submit" class="submit-btn" style="flex: 2;">
-                            <i class="fas fa-save"></i>
-                            حفظ التغييرات
-                        </button>
-                        <button type="button" id="cancelAccountChanges" class="logout-btn" style="flex: 1;">
-                            <i class="fas fa-times"></i>
-                            إلغاء
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    <!-- نافذة عرض السؤال -->
     <div class="question-modal" id="questionModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1328,8 +1108,8 @@
             <div class="modal-body">
                 <div class="modal-details">
                     <div class="modal-detail">
-                        <label>المادة الدراسية</label>
-                        <div class="value" id="modalSubject">-</div>
+                        <label>اسم الطالب</label>
+                        <div class="value" id="modalName">-</div>
                     </div>
                     <div class="modal-detail">
                         <label>تاريخ الإرسال</label>
@@ -1368,6 +1148,7 @@
         </div>
     </div>
 
+    <!-- نافذة النجاح -->
     <div class="success-modal" id="successModal">
         <div class="success-modal-content">
             <div class="success-icon">
@@ -1413,222 +1194,71 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-        const auth = firebase.auth();
 
-        class FirebaseStudentSystem {
+        class StudentSystem {
             constructor() {
-                this.auth = auth;
                 this.db = db;
-                this.currentUser = null;
+                this.currentStudent = null;
+                this.studentId = null;
                 this.unsubscribeQuestions = null;
-                this.unsubscribeNotifications = null;
-                
-                this.initAuthPersistence();
             }
             
-            initAuthPersistence() {
-                return this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-                    .then(() => {
-                        console.log('تم تعيين استمرارية المصادقة إلى LOCAL');
-                        return true;
-                    })
-                    .catch((error) => {
-                        console.error('خطأ في تعيين استمرارية المصادقة:', error);
-                        return false;
-                    });
-            }
-            
-            getAuthErrorMessage(errorCode) {
-                const messages = {
-                    'auth/email-already-in-use': 'اسم المستخدم مستخدم بالفعل',
-                    'auth/invalid-email': 'اسم المستخدم غير صالح',
-                    'auth/operation-not-allowed': 'عملية التسجيل غير مسموحة',
-                    'auth/weak-password': 'كلمة المرور ضعيفة',
-                    'auth/user-disabled': 'هذا الحساب معطل',
-                    'auth/user-not-found': 'اسم المستخدم غير موجود',
-                    'auth/wrong-password': 'كلمة المرور غير صحيحة',
-                    'auth/too-many-requests': 'تم تجاوز عدد المحاولات، حاول لاحقاً',
-                    'auth/network-request-failed': 'فشل الاتصال بالشبكة، تحقق من اتصالك بالإنترنت'
-                };
-                return messages[errorCode] || 'حدث خطأ غير متوقع';
-            }
-            
-            usernameToEmail(username) {
-                let email = username.trim().toLowerCase();
-                email = email.replace(/\s+/g, '.');
-                email = email.replace(/[^a-zA-Z0-9._-]/g, '');
-                return email + '@ayn.student';
-            }
-            
-            validateMauritanianPhone(phone) {
+            validatePhone(phone) {
                 if (!phone) return true;
-                const phoneRegex = /^222\d{8}$/;
+                const phoneRegex = /^\d{8}$/;
                 return phoneRegex.test(phone);
             }
             
-            async registerStudent(name, username, password, phone = '') {
+            async loginStudent(name) {
                 try {
-                    if (!navigator.onLine) {
-                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
+                    if (!name.trim()) {
+                        return { success: false, message: 'الرجاء إدخال اسم الطالب' };
                     }
                     
-                    if (phone && !this.validateMauritanianPhone(phone)) {
-                        return { 
-                            success: false, 
-                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
-                        };
-                    }
+                    // استخدام localStorage لتخزين اسم الطالب
+                    const studentId = 'student_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     
-                    const email = this.usernameToEmail(username);
-                    const userCredential = await this.auth.createUserWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
-                    
-                    await this.db.collection('users').doc(user.uid).set({
-                        name: name,
-                        username: username,
-                        email: email,
-                        phone: phone || '',
-                        role: 'student',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    this.currentUser = { 
-                        uid: user.uid, 
-                        name, 
-                        username, 
-                        email, 
-                        phone, 
-                        role: 'student',
-                        updatePassword: function(password) {
-                            return user.updatePassword(password);
-                        }
+                    this.currentStudent = {
+                        id: studentId,
+                        name: name.trim()
                     };
                     
-                    return { success: true, user: this.currentUser };
-                } catch (error) {
-                    console.error('خطأ في التسجيل:', error);
-                    return { 
-                        success: false, 
-                        message: this.getAuthErrorMessage(error.code) || error.message 
-                    };
-                }
-            }
-            
-            async loginStudent(username, password) {
-                try {
-                    if (!navigator.onLine) {
-                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
-                    }
+                    this.studentId = studentId;
                     
-                    const email = this.usernameToEmail(username);
-                    const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
+                    // حفظ في localStorage
+                    localStorage.setItem('studentData', JSON.stringify(this.currentStudent));
                     
-                    await this.db.collection('users').doc(user.uid).update({
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    const userDoc = await this.db.collection('users').doc(user.uid).get();
-                    const userData = userDoc.data();
-                    
-                    this.currentUser = { 
-                        uid: user.uid, 
-                        ...userData,
-                        updatePassword: function(password) {
-                            return user.updatePassword(password);
-                        }
-                    };
-                    
-                    return { success: true, user: this.currentUser };
+                    return { success: true, student: this.currentStudent };
                 } catch (error) {
                     console.error('خطأ في تسجيل الدخول:', error);
                     return { 
                         success: false, 
-                        message: this.getAuthErrorMessage(error.code) || error.message 
+                        message: 'حدث خطأ أثناء تسجيل الدخول' 
                     };
                 }
             }
             
-            async logoutStudent() {
+            async submitQuestion(title, content, whatsapp = '') {
                 try {
-                    if (this.unsubscribeQuestions) {
-                        this.unsubscribeQuestions();
-                        this.unsubscribeQuestions = null;
-                    }
-                    if (this.unsubscribeNotifications) {
-                        this.unsubscribeNotifications();
-                        this.unsubscribeNotifications = null;
+                    if (!this.currentStudent) {
+                        return { success: false, message: 'الرجاء تسجيل الدخول أولاً' };
                     }
                     
-                    await this.auth.signOut();
-                    this.currentUser = null;
+                    if (!content.trim()) {
+                        return { success: false, message: 'الرجاء كتابة نص السؤال' };
+                    }
                     
-                    return { success: true };
-                } catch (error) {
-                    console.error('خطأ في تسجيل الخروج:', error);
-                    return { success: false, message: error.message };
-                }
-            }
-            
-            async updateStudent(updates) {
-                try {
-                    if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
-                    
-                    if (updates.phone && !this.validateMauritanianPhone(updates.phone)) {
+                    if (whatsapp && !this.validatePhone(whatsapp)) {
                         return { 
                             success: false, 
-                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
-                        };
-                    }
-                    
-                    const user = this.auth.currentUser;
-                    
-                    if (updates.password && user) {
-                        await user.updatePassword(updates.password);
-                        delete updates.password;
-                    }
-                    
-                    await this.db.collection('users').doc(this.currentUser.uid).update(updates);
-                    
-                    this.currentUser = { ...this.currentUser, ...updates };
-                    
-                    return { success: true, user: this.currentUser };
-                } catch (error) {
-                    console.error('خطأ في تحديث بيانات الطالب:', error);
-                    return { success: false, message: error.message };
-                }
-            }
-            
-            async submitQuestion(subject, title, content, whatsapp = '') {
-                try {
-                    if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
-                    
-                    if (!navigator.onLine) {
-                        return { success: false, message: 'لا يوجد اتصال بالإنترنت' };
-                    }
-                    
-                    if (whatsapp && !this.validateMauritanianPhone(whatsapp)) {
-                        return { 
-                            success: false, 
-                            message: 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)' 
-                        };
-                    }
-                    
-                    const finalWhatsapp = whatsapp || this.currentUser.phone || '';
-                    
-                    if (!finalWhatsapp) {
-                        return {
-                            success: false,
-                            message: 'الرجاء إدخال رقم واتساب موريتاني للإجابة على سؤالك'
+                            message: 'رقم الواتساب يجب أن يكون 8 أرقام فقط' 
                         };
                     }
                     
                     const questionData = {
-                        userId: this.currentUser.uid,
-                        userName: this.currentUser.name,
-                        userPhone: finalWhatsapp,
-                        subject: subject,
+                        studentId: this.currentStudent.id,
+                        studentName: this.currentStudent.name,
+                        phone: whatsapp || '',
                         title: title || '',
                         question: content,
                         answer: '',
@@ -1641,9 +1271,9 @@
                     
                     // إضافة إشعار للمشرف
                     await this.db.collection('notifications').add({
-                        userId: this.currentUser.uid,
+                        studentId: this.currentStudent.id,
                         title: 'سؤال جديد',
-                        message: `سؤال جديد من ${this.currentUser.name} في مادة ${subject}`,
+                        message: `سؤال جديد من ${this.currentStudent.name}`,
                         read: false,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         type: 'admin'
@@ -1651,9 +1281,9 @@
                     
                     // إضافة إشعار للطالب
                     await this.db.collection('notifications').add({
-                        userId: this.currentUser.uid,
+                        studentId: this.currentStudent.id,
                         title: 'تم استلام سؤالك',
-                        message: `تم استلام سؤالك في مادة ${subject} وسيتم الرد عليك قريباً`,
+                        message: `تم استلام سؤالك وسيتم الرد عليك قريباً`,
                         read: false,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         type: 'student'
@@ -1675,10 +1305,12 @@
             
             async getStudentQuestions() {
                 try {
-                    if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
+                    if (!this.currentStudent) {
+                        return [];
+                    }
                     
                     const snapshot = await this.db.collection('questions')
-                        .where('userId', '==', this.currentUser.uid)
+                        .where('studentId', '==', this.currentStudent.id)
                         .get();
                     
                     const questions = snapshot.docs.map(doc => ({
@@ -1686,7 +1318,7 @@
                         ...doc.data()
                     }));
                     
-                    // ترتيب يدوي
+                    // ترتيب حسب التاريخ (الأحدث أولاً)
                     questions.sort((a, b) => {
                         const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
                         const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
@@ -1696,37 +1328,6 @@
                     return questions;
                 } catch (error) {
                     console.error('خطأ في جلب أسئلة الطالب:', error);
-                    
-                    // إذا كان الخطأ بسبب الفهرس، حاول بطريقة مختلفة
-                    if (error.code === 'failed-precondition') {
-                        console.log('جرب جلب البيانات بدون ترتيب...');
-                        return this.getStudentQuestionsSimple();
-                    }
-                    
-                    return [];
-                }
-            }
-            
-            // طريقة بديلة لجلب الأسئلة
-            async getStudentQuestionsSimple() {
-                try {
-                    if (!this.currentUser) throw new Error('لم يتم تسجيل الدخول');
-                    
-                    const snapshot = await this.db.collection('questions').get();
-                    
-                    // فلترة يدوية على جانب العميل
-                    const questions = snapshot.docs
-                        .map(doc => ({ id: doc.id, ...doc.data() }))
-                        .filter(q => q.userId === this.currentUser.uid)
-                        .sort((a, b) => {
-                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
-                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
-                            return dateB - dateA;
-                        });
-                    
-                    return questions;
-                } catch (error) {
-                    console.error('خطأ في جلب الأسئلة البسيط:', error);
                     return [];
                 }
             }
@@ -1737,7 +1338,7 @@
                     if (doc.exists) {
                         const question = { id: doc.id, ...doc.data() };
                         
-                        if (question.userId !== this.currentUser?.uid) {
+                        if (question.studentId !== this.currentStudent?.id) {
                             throw new Error('ليس لديك صلاحية لعرض هذا السؤال');
                         }
                         
@@ -1751,15 +1352,14 @@
             }
             
             setupQuestionsListener(callback) {
-                if (!this.currentUser) return null;
+                if (!this.currentStudent) return null;
                 
                 if (this.unsubscribeQuestions) {
                     this.unsubscribeQuestions();
                 }
                 
-                // استعلام مبسط بدون orderBy أولي
                 this.unsubscribeQuestions = this.db.collection('questions')
-                    .where('userId', '==', this.currentUser.uid)
+                    .where('studentId', '==', this.currentStudent.id)
                     .onSnapshot(snapshot => {
                         const questions = snapshot.docs.map(doc => ({
                             id: doc.id,
@@ -1770,98 +1370,19 @@
                         questions.sort((a, b) => {
                             const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
                             const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
-                            return dateB - dateA; // ترتيب تنازلي
+                            return dateB - dateA;
                         });
                         
                         callback(questions);
                     }, error => {
                         console.error('خطأ في مستمع الأسئلة:', error);
-                        
-                        // إذا كان الخطأ بسبب الفهرس، حاول مرة أخرى بدون ترتيب
-                        if (error.code === 'failed-precondition') {
-                            console.log('جرب استعلاماً مختلفاً...');
-                            this.setupSimpleQuestionsListener(callback);
-                        }
                     });
                     
                 return this.unsubscribeQuestions;
-            }
-            
-            // دالة بديلة بسيطة بدون orderBy
-            setupSimpleQuestionsListener(callback) {
-                if (!this.currentUser) return null;
-                
-                if (this.unsubscribeQuestions) {
-                    this.unsubscribeQuestions();
-                }
-                
-                this.unsubscribeQuestions = this.db.collection('questions')
-                    .where('userId', '==', this.currentUser.uid)
-                    .onSnapshot(snapshot => {
-                        const questions = snapshot.docs.map(doc => ({
-                            id: doc.id,
-                            ...doc.data()
-                        }));
-                        
-                        // ترتيب يدوي
-                        questions.sort((a, b) => {
-                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
-                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
-                            return dateB - dateA;
-                        });
-                        
-                        callback(questions);
-                    }, error => {
-                        console.error('خطأ في المستمع البسيط:', error);
-                    });
-                    
-                return this.unsubscribeQuestions;
-            }
-            
-            setupNotificationsListener(callback) {
-                if (!this.currentUser) return null;
-                
-                if (this.unsubscribeNotifications) {
-                    this.unsubscribeNotifications();
-                }
-                
-                this.unsubscribeNotifications = this.db.collection('notifications')
-                    .where('userId', '==', this.currentUser.uid)
-                    .onSnapshot(snapshot => {
-                        const notifications = snapshot.docs.map(doc => ({
-                            id: doc.id,
-                            ...doc.data()
-                        }));
-                        
-                        // ترتيب يدوي
-                        notifications.sort((a, b) => {
-                            const dateA = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp || 0);
-                            const dateB = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp || 0);
-                            return dateB - dateA;
-                        });
-                        
-                        callback(notifications);
-                    }, error => {
-                        console.error('خطأ في مستمع الإشعارات:', error);
-                    });
-                    
-                return this.unsubscribeNotifications;
-            }
-            
-            async markNotificationAsRead(notificationId) {
-                try {
-                    await this.db.collection('notifications').doc(notificationId).update({
-                        read: true
-                    });
-                    return { success: true };
-                } catch (error) {
-                    console.error('خطأ في تحديث الإشعار:', error);
-                    return { success: false, message: error.message };
-                }
             }
         }
 
-        const studentSystem = new FirebaseStudentSystem();
+        const studentSystem = new StudentSystem();
 
         // ==================== دوال المساعدة ====================
         function showLoading() {
@@ -1922,39 +1443,19 @@
             });
         }
         
-        function checkAuthState() {
-            auth.onAuthStateChanged(async (user) => {
-                console.log('حالة المصادقة:', user ? 'تم تسجيل الدخول' : 'لم يتم تسجيل الدخول');
-                
-                if (user) {
-                    showLoading();
-                    try {
-                        const userDoc = await db.collection('users').doc(user.uid).get();
-                        if (userDoc.exists && userDoc.data().role === 'student') {
-                            studentSystem.currentUser = { 
-                                uid: user.uid, 
-                                ...userDoc.data(),
-                                updatePassword: function(password) {
-                                    return user.updatePassword(password);
-                                }
-                            };
-                            showStudentDashboard();
-                        } else {
-                            await auth.signOut();
-                            studentSystem.currentUser = null;
-                            hideLoading();
-                        }
-                    } catch (error) {
-                        console.error('خطأ في التحقق من حالة المستخدم:', error);
-                        hideLoading();
-                    }
-                } else {
-                    studentSystem.currentUser = null;
-                    document.getElementById('loginContainer').classList.add('active');
-                    document.getElementById('studentDashboard').classList.remove('active');
-                    hideLoading();
+        function checkLoginState() {
+            const studentData = localStorage.getItem('studentData');
+            if (studentData) {
+                try {
+                    const student = JSON.parse(studentData);
+                    studentSystem.currentStudent = student;
+                    studentSystem.studentId = student.id;
+                    showStudentDashboard();
+                } catch (error) {
+                    console.error('خطأ في تحميل بيانات الطالب:', error);
+                    localStorage.removeItem('studentData');
                 }
-            });
+            }
         }
         
         function showStudentDashboard() {
@@ -1963,18 +1464,14 @@
             updateUserInfo();
             loadUserQuestions();
             startRealTimeListeners();
-            hideLoading();
         }
         
         function updateUserInfo() {
-            if (!studentSystem.currentUser) return;
+            if (!studentSystem.currentStudent) return;
             
-            document.getElementById('userName').textContent = `مرحباً، ${studentSystem.currentUser.name}`;
-            document.getElementById('userPhone').textContent = studentSystem.currentUser.phone ? 
-                `رقم الواتساب: ${studentSystem.currentUser.phone}` : 'لم يتم إضافة رقم واتساب';
-            
+            document.getElementById('userName').textContent = `مرحباً، ${studentSystem.currentStudent.name}`;
             const userAvatar = document.getElementById('userAvatar');
-            userAvatar.textContent = studentSystem.currentUser.name.charAt(0).toUpperCase();
+            userAvatar.textContent = studentSystem.currentStudent.name.charAt(0).toUpperCase();
         }
         
         function loadUserQuestions(filter = 'all') {
@@ -2023,8 +1520,7 @@
                     </div>
                     <div class="question-date">
                         <i class="fas fa-calendar"></i> ${dateString} - ${timeString}
-                        <span style="margin-right: 15px;">|</span>
-                        <i class="fas fa-book"></i> ${question.subject}
+                        ${question.phone ? `<span style="margin-right: 15px;">|</span><i class="fab fa-whatsapp"></i> ${question.phone}` : ''}
                     </div>
                     <div class="question-content">${question.question.substring(0, 200)}${question.question.length > 200 ? '...' : ''}</div>
                     ${question.answer ? `
@@ -2057,8 +1553,8 @@
                 const timeString = date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                 
                 document.getElementById('modalDate').textContent = `${dateString} - ${timeString}`;
-                document.getElementById('modalSubject').textContent = question.subject;
-                document.getElementById('modalWhatsapp').textContent = question.userPhone || 'لم يتم إضافة رقم';
+                document.getElementById('modalName').textContent = question.studentName || 'غير معروف';
+                document.getElementById('modalWhatsapp').textContent = question.phone || 'لم يتم إضافة رقم';
                 document.getElementById('modalStatus').textContent = question.status === 'pending' ? 'بانتظار الرد' : 'تم الرد';
                 document.getElementById('modalStatus').className = `question-status ${question.status === 'pending' ? 'status-pending' : 'status-answered'}`;
                 document.getElementById('modalTitle').textContent = question.title || 'بدون عنوان';
@@ -2088,31 +1584,16 @@
                 const activeFilter = document.querySelector('.questions-tab.active')?.dataset.filter || 'all';
                 renderQuestionsList(questions, activeFilter);
             });
-            
-            studentSystem.setupNotificationsListener(notifications => {
-                notifications.forEach(notification => {
-                    if (!notification.read && notification.type === 'student') {
-                        showNotification(notification.title, notification.message, 'success');
-                        studentSystem.markNotificationAsRead(notification.id);
-                    }
-                });
-            });
         }
 
         // ==================== تهيئة الصفحة ====================
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            setTimeout(() => {
-                hideLoading();
-            }, 500);
+            // التحقق من حالة تسجيل الدخول
+            checkLoginState();
             
-            checkAuthState();
-            
-            // جميع المستمعين للأحداث يبقون كما هم
-            // ... (الكود المتبقي يبقى كما هو تماماً)
-            checkAuthState();
-            
+            // إعداد حقل عنوان السؤال
             document.getElementById('questionTitle').addEventListener('input', function() {
                 const length = this.value.length;
                 document.getElementById('titleCharCount').textContent = `${length}/100`;
@@ -2125,6 +1606,7 @@
                 }
             });
             
+            // إعداد حقل نص السؤال
             document.getElementById('questionContent').addEventListener('input', function() {
                 const length = this.value.length;
                 document.getElementById('contentCharCount').textContent = `${length}/1500`;
@@ -2137,36 +1619,18 @@
                 }
             });
             
-            document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+            // تسجيل الدخول
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const username = document.getElementById('loginUsername').value.trim();
-                const password = document.getElementById('loginPassword').value;
+                const name = document.getElementById('studentName').value.trim();
                 
-                document.querySelectorAll('#loginForm .error-message').forEach(el => {
-                    el.style.display = 'none';
-                });
+                document.getElementById('nameError').style.display = 'none';
                 
-                let hasError = false;
-                
-                if (!username) {
-                    document.getElementById('loginUsernameError').textContent = 'الرجاء إدخال اسم المستخدم';
-                    document.getElementById('loginUsernameError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (!password) {
-                    document.getElementById('loginPasswordError').textContent = 'الرجاء إدخال كلمة المرور';
-                    document.getElementById('loginPasswordError').style.display = 'block';
-                    hasError = true;
-                } else if (password.length < 6) {
-                    document.getElementById('loginPasswordError').textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-                    document.getElementById('loginPasswordError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (hasError) {
-                    showNotification('خطأ في تسجيل الدخول', 'الرجاء تصحيح الأخطاء في النموذج', 'error');
+                if (!name) {
+                    document.getElementById('nameError').textContent = 'الرجاء إدخال اسم الطالب';
+                    document.getElementById('nameError').style.display = 'block';
+                    showNotification('خطأ', 'الرجاء إدخال اسم الطالب', 'error');
                     return;
                 }
                 
@@ -2174,9 +1638,9 @@
                 const originalText = submitBtn.innerHTML;
                 
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الدخول...';
                 
-                const result = await studentSystem.loginStudent(username, password);
+                const result = await studentSystem.loginStudent(name);
                 
                 if (result.success) {
                     showNotification('نجاح', 'تم تسجيل الدخول بنجاح', 'success');
@@ -2189,112 +1653,18 @@
                 submitBtn.innerHTML = originalText;
             });
             
-            document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('registerName').value.trim();
-                const username = document.getElementById('registerUsername').value.trim();
-                const password = document.getElementById('registerPassword').value;
-                const confirmPassword = document.getElementById('registerConfirmPassword').value;
-                const phone = document.getElementById('registerPhone').value.trim();
-                
-                document.querySelectorAll('#registerForm .error-message').forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                let hasError = false;
-                
-                if (!name) {
-                    document.getElementById('registerNameError').textContent = 'الرجاء إدخال الاسم';
-                    document.getElementById('registerNameError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (!username) {
-                    document.getElementById('registerUsernameError').textContent = 'الرجاء إدخال اسم المستخدم';
-                    document.getElementById('registerUsernameError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (!password) {
-                    document.getElementById('registerPasswordError').textContent = 'الرجاء إدخال كلمة المرور';
-                    document.getElementById('registerPasswordError').style.display = 'block';
-                    hasError = true;
-                } else if (password.length < 6) {
-                    document.getElementById('registerPasswordError').textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-                    document.getElementById('registerPasswordError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (!confirmPassword) {
-                    document.getElementById('registerConfirmError').textContent = 'الرجاء تأكيد كلمة المرور';
-                    document.getElementById('registerConfirmError').style.display = 'block';
-                    hasError = true;
-                } else if (password !== confirmPassword) {
-                    document.getElementById('registerConfirmError').textContent = 'كلمات المرور غير متطابقة';
-                    document.getElementById('registerConfirmError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (phone && !studentSystem.validateMauritanianPhone(phone)) {
-                    document.getElementById('registerPhoneError').textContent = 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)';
-                    document.getElementById('registerPhoneError').style.display = 'block';
-                    hasError = true;
-                }
-                
-                if (hasError) {
-                    showNotification('خطأ في التسجيل', 'الرجاء تصحيح الأخطاء في النموذج', 'error');
-                    return;
-                }
-                
-                const submitBtn = document.getElementById('registerSubmitBtn');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الحساب...';
-                
-                const result = await studentSystem.registerStudent(name, username, password, phone);
-                
-                if (result.success) {
-                    showNotification('نجاح', 'تم إنشاء الحساب بنجاح', 'success');
-                    document.getElementById('registerFormElement').reset();
-                    
-                    setTimeout(async () => {
-                        const loginResult = await studentSystem.loginStudent(username, password);
-                        if (loginResult.success) {
-                            showNotification('تم التسجيل', 'تم تسجيل دخولك تلقائياً', 'success');
-                            showStudentDashboard();
-                        } else {
-                            document.querySelector('[data-tab="login"]').click();
-                            document.getElementById('loginUsername').value = username;
-                            document.getElementById('loginPassword').value = password;
-                        }
-                    }, 1000);
-                } else {
-                    showNotification('خطأ', result.message, 'error');
-                }
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            });
-            
+            // إرسال سؤال
             document.getElementById('questionForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                if (!studentSystem.currentUser) {
+                if (!studentSystem.currentStudent) {
                     showNotification('خطأ', 'الرجاء تسجيل الدخول أولاً', 'error');
                     return;
                 }
                 
-                const subject = document.getElementById('questionSubject').value;
                 const title = document.getElementById('questionTitle').value.trim();
                 const whatsappNumber = document.getElementById('questionWhatsapp').value.trim();
                 const question = document.getElementById('questionContent').value.trim();
-                
-                if (!subject) {
-                    showNotification('خطأ', 'الرجاء اختيار المادة الدراسية', 'error');
-                    return;
-                }
                 
                 if (!question) {
                     document.getElementById('contentError').textContent = 'الرجاء كتابة نص السؤال';
@@ -2304,11 +1674,11 @@
                     return;
                 }
                 
-                if (whatsappNumber && !studentSystem.validateMauritanianPhone(whatsappNumber)) {
-                    document.getElementById('whatsappError').textContent = 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)';
+                if (whatsappNumber && !studentSystem.validatePhone(whatsappNumber)) {
+                    document.getElementById('whatsappError').textContent = 'رقم الواتساب يجب أن يكون 8 أرقام فقط';
                     document.getElementById('whatsappError').style.display = 'block';
                     document.getElementById('questionWhatsapp').classList.add('error');
-                    showNotification('خطأ', 'رقم الواتساب يجب أن يكون موريتاني (8 أرقام بعد 222)', 'error');
+                    showNotification('خطأ', 'رقم الواتساب يجب أن يكون 8 أرقام فقط', 'error');
                     return;
                 }
                 
@@ -2318,7 +1688,7 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
                 
-                const result = await studentSystem.submitQuestion(subject, title, question, whatsappNumber);
+                const result = await studentSystem.submitQuestion(title, question, whatsappNumber);
                 
                 if (result.success) {
                     document.getElementById('successModal').classList.add('show');
@@ -2341,64 +1711,21 @@
                 submitBtn.innerHTML = originalText;
             });
             
-            document.getElementById('accountBtn').addEventListener('click', function() {
-                if (!studentSystem.currentUser) return;
-                
-                document.getElementById('accountName').value = studentSystem.currentUser.name;
-                document.getElementById('accountPhone').value = studentSystem.currentUser.phone || '';
-                document.getElementById('accountNewPassword').value = '';
-                document.getElementById('accountModal').classList.add('show');
-            });
-            
-            document.getElementById('accountForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('accountName').value.trim();
-                const phone = document.getElementById('accountPhone').value.trim();
-                const newPassword = document.getElementById('accountNewPassword').value;
-                
-                const updates = { name, phone };
-                if (newPassword) {
-                    updates.password = newPassword;
-                }
-                
-                const result = await studentSystem.updateStudent(updates);
-                
-                if (result.success) {
-                    showNotification('نجاح', 'تم تحديث بيانات الحساب', 'success');
-                    document.getElementById('accountModal').classList.remove('show');
-                    updateUserInfo();
-                } else {
-                    showNotification('خطأ', result.message, 'error');
-                }
-            });
-            
-            document.getElementById('logoutBtn').addEventListener('click', async function() {
+            // تسجيل الخروج
+            document.getElementById('logoutBtn').addEventListener('click', function() {
                 if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                    const result = await studentSystem.logoutStudent();
+                    localStorage.removeItem('studentData');
+                    studentSystem.currentStudent = null;
+                    studentSystem.studentId = null;
                     
-                    if (result.success) {
-                        document.getElementById('studentDashboard').classList.remove('active');
-                        document.getElementById('loginContainer').classList.add('active');
-                        document.getElementById('loginUsername').value = '';
-                        document.getElementById('loginPassword').value = '';
-                        showNotification('تم', 'تم تسجيل خروجك بنجاح', 'info');
-                    }
+                    document.getElementById('studentDashboard').classList.remove('active');
+                    document.getElementById('loginContainer').classList.add('active');
+                    document.getElementById('studentName').value = '';
+                    showNotification('تم', 'تم تسجيل خروجك بنجاح', 'info');
                 }
             });
             
-            document.querySelectorAll('.login-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.dataset.tab;
-                    
-                    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    document.getElementById(tabName + 'Form').classList.add('active');
-                });
-            });
-            
+            // أزرار الفلترة
             document.querySelectorAll('.questions-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.questions-tab').forEach(t => t.classList.remove('active'));
@@ -2407,18 +1734,12 @@
                 });
             });
             
-            document.getElementById('closeAccountModal').addEventListener('click', function() {
-                document.getElementById('accountModal').classList.remove('show');
-            });
-            
-            document.getElementById('cancelAccountChanges').addEventListener('click', function() {
-                document.getElementById('accountModal').classList.remove('show');
-            });
-            
+            // إغلاق نافذة النجاح
             document.getElementById('closeSuccessModal').addEventListener('click', function() {
                 document.getElementById('successModal').classList.remove('show');
             });
             
+            // إغلاق نافذة السؤال
             document.getElementById('closeModal').addEventListener('click', function() {
                 document.getElementById('questionModal').classList.remove('show');
             });
@@ -2429,19 +1750,12 @@
                 }
             });
             
-            document.getElementById('loginPassword')?.addEventListener('keypress', function(e) {
+            // السماح بالدخول بالضغط على Enter
+            document.getElementById('studentName')?.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     document.getElementById('loginSubmitBtn').click();
                 }
             });
-            
-            window.addEventListener('popstate', function(event) {
-                if (studentSystem.currentUser) {
-                    history.pushState(null, null, window.location.href);
-                }
-            });
-            
-            history.pushState(null, null, window.location.href);
         });
     </script>
 </body>
