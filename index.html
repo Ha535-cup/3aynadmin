@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -362,26 +361,6 @@
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
         }
 
-        .account-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(44, 90, 160, 0.2);
-        }
-
-        .account-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(44, 90, 160, 0.3);
-        }
-
         .my-questions {
             margin-top: 50px;
         }
@@ -436,6 +415,7 @@
             cursor: pointer;
             transition: var(--transition);
             border: 1px solid rgba(44, 90, 160, 0.1);
+            position: relative;
         }
 
         .question-item:hover {
@@ -449,6 +429,23 @@
 
         .question-item.answered {
             border-right-color: var(--secondary);
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
         }
 
         .question-header {
@@ -503,26 +500,16 @@
             -webkit-box-orient: vertical;
         }
 
-        .answer-content {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0, 168, 150, 0.05) 0%, rgba(0, 168, 150, 0.02) 100%);
-            border-radius: var(--border-radius);
-            border-right: 3px solid var(--secondary);
-        }
-
-        .answer-label {
-            color: var(--secondary);
-            font-weight: 700;
-            margin-bottom: 10px;
-            display: block;
-            font-size: 15px;
-        }
-
-        .answer-text {
-            color: var(--dark);
-            line-height: 1.8;
-            font-size: 15px;
+        .reply-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(44, 90, 160, 0.1);
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .question-modal {
@@ -648,48 +635,99 @@
             font-size: 15px;
         }
 
-        .account-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .replies-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--gray-light);
+            padding-top: 25px;
         }
 
-        .account-modal.show {
+        .replies-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 20px;
             display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
         }
 
-        .account-modal-content {
-            background-color: white;
+        .reply-item {
+            background: #f8f9fa;
             border-radius: var(--border-radius);
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 3px solid var(--primary-light);
         }
 
-        .account-modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 30px;
-            border-top-right-radius: var(--border-radius);
-            border-top-left-radius: var(--border-radius);
+        .reply-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
         }
 
-        .account-modal-header h3 {
-            font-size: 24px;
+        .reply-sender {
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
+        }
+
+        .reply-sender i {
+            color: var(--secondary);
+        }
+
+        .reply-time {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .reply-content {
+            color: var(--dark);
+            line-height: 1.8;
+            font-size: 15px;
+            white-space: pre-wrap;
+        }
+
+        .reply-form {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .reply-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .reply-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .reply-send-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reply-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(44, 90, 160, 0.3);
         }
 
         .success-modal {
@@ -910,72 +948,25 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 15px;
-            }
-            
-            .form-card {
-                padding: 25px 20px;
-            }
-            
-            .header {
-                padding: 25px 15px;
-            }
-            
-            .header .logo {
-                font-size: 26px;
-            }
-            
-            .header .tagline {
-                font-size: 16px;
-            }
-            
-            .user-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-            
-            .user-header .actions {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-            }
-            
-            .signature {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-            
-            .modal-body {
-                padding: 25px 20px;
-            }
+            .container { padding: 0 15px; }
+            .form-card { padding: 25px 20px; }
+            .header { padding: 25px 15px; }
+            .header .logo { font-size: 26px; }
+            .header .tagline { font-size: 16px; }
+            .user-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .user-header .actions { width: 100%; display: flex; justify-content: space-between; }
+            .signature { flex-direction: column; text-align: center; gap: 15px; }
+            .modal-body { padding: 25px 20px; }
+            .reply-form { flex-direction: column; }
+            .reply-send-btn { padding: 15px; }
         }
 
         @media (max-width: 480px) {
-            .header .logo {
-                font-size: 22px;
-            }
-            
-            .form-card h2 {
-                font-size: 22px;
-            }
-            
-            .submit-btn {
-                padding: 16px 20px;
-                font-size: 16px;
-            }
-            
-            .user-header .actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .account-btn, .logout-btn {
-                width: 100%;
-                justify-content: center;
-            }
+            .header .logo { font-size: 22px; }
+            .form-card h2 { font-size: 22px; }
+            .submit-btn { padding: 16px 20px; font-size: 16px; }
+            .user-header .actions { flex-direction: column; gap: 10px; }
+            .logout-btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -990,15 +981,23 @@
             <i class="fas fa-graduation-cap"></i>
             منصة عين التعليمية
         </div>
-        <p class="tagline">منصة تعليمية متكاملة للإجابة على استفسارات الطلاب بكل خصوصية وسرية تامة، نضمن لك الحصول على إجابات دقيقة من خبراء متخصصين</p>
+        <p class="tagline">منصة تعليمية متكاملة للإجابة على استفسارات الطلاب بكل خصوصية وسرية تامة</p>
     </header>
 
-    <!-- شاشة الدخول باسم الطالب فقط -->
+    <!-- شاشة الدخول برقم الهاتف والاسم -->
     <div class="login-container active" id="loginContainer">
         <div class="container">
             <div class="login-card">
-                <h2><i class="fas fa-sign-in-alt"></i>أدخل اسمك للبدء</h2>
+                <h2><i class="fas fa-sign-in-alt"></i>تسجيل الدخول</h2>
                 <form id="loginForm">
+                    <div class="form-group">
+                        <label for="studentPhone">رقم الواتساب (8 أرقام)</label>
+                        <div class="input-with-icon">
+                            <i class="fab fa-whatsapp"></i>
+                            <input type="tel" id="studentPhone" placeholder="********" maxlength="8" pattern="\d{8}" required>
+                        </div>
+                        <div class="error-message" id="phoneError">يجب إدخال 8 أرقام صحيحة</div>
+                    </div>
                     <div class="form-group">
                         <label for="studentName">اسم الطالب</label>
                         <div class="input-with-icon">
@@ -1006,14 +1005,15 @@
                             <input type="text" id="studentName" placeholder="أدخل اسمك" required>
                         </div>
                         <div class="error-message" id="nameError">الرجاء إدخال اسمك</div>
-                        <p style="color: var(--gray); font-size: 14px; margin-top: 8px; line-height: 1.5;">سيتم حفظ اسمك لتسهيل عملية التواصل معك</p>
                     </div>
-                    
                     <button type="submit" class="submit-btn" id="loginSubmitBtn">
                         <i class="fas fa-sign-in-alt"></i>
-                        الدخول
+                        دخول
                     </button>
                 </form>
+                <p style="color: var(--gray); font-size: 14px; margin-top: 20px; text-align: center;">
+                    رقم الهاتف هو معرفك الوحيد. سيتم حفظ جلسة الدخول تلقائيًا.
+                </p>
             </div>
         </div>
     </div>
@@ -1026,7 +1026,7 @@
                     <div class="user-avatar" id="userAvatar">ط</div>
                     <div class="user-details">
                         <h3 id="userName">مرحباً، الطالب</h3>
-                        <p>منصة عين التعليمية</p>
+                        <p id="userPhone">رقم الواتساب: -</p>
                     </div>
                 </div>
                 <div class="actions">
@@ -1039,7 +1039,7 @@
 
             <div class="form-card">
                 <h2><i class="fas fa-question-circle"></i>اطرح سؤالك</h2>
-                <p class="form-subtitle">اكتب سؤالك بالتفصيل وسيقوم المشرفون بالرد عليك عبر واتساب في أقرب وقت ممكن</p>
+                <p class="form-subtitle">اكتب سؤالك بالتفصيل وسيقوم المشرفون بالرد عليك عبر واتساب (سيتم استخدام رقم هاتفك المسجل)</p>
                 
                 <form id="questionForm">
                     <div class="form-group">
@@ -1055,20 +1055,10 @@
                         <label for="questionContent">نص السؤال</label>
                         <div class="input-with-icon">
                             <i class="fas fa-edit"></i>
-                            <textarea id="questionContent" rows="6" placeholder="اكتب سؤالك بالتفصيل هنا... اذكر كل المعلومات المطلوبة للحصول على إجابة دقيقة" required></textarea>
+                            <textarea id="questionContent" rows="6" placeholder="اكتب سؤالك بالتفصيل هنا..." required></textarea>
                         </div>
                         <div class="char-count" id="contentCharCount">0/1500</div>
                         <div class="error-message" id="contentError">الرجاء إدخال نص السؤال</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="questionWhatsapp">رقم الواتساب (8 أرقام فقط)</label>
-                        <div class="input-with-icon">
-                            <i class="fab fa-whatsapp"></i>
-                            <input type="tel" id="questionWhatsapp" placeholder="مثال: 12345678" maxlength="8" pattern="\d{8}">
-                        </div>
-                        <div class="error-message" id="whatsappError">يجب أن يكون رقم واتساب صحيح (8 أرقام فقط)</div>
-                        <p style="color: var(--gray); font-size: 13px; margin-top: 8px; line-height: 1.5;">سيتم استخدام هذا الرقم للتواصل معك عبر واتساب للرد على سؤالك</p>
                     </div>
                     
                     <button type="submit" class="submit-btn" id="submitBtn">
@@ -1079,7 +1069,7 @@
                 
                 <div class="privacy-notice">
                     <h4><i class="fas fa-shield-alt"></i>خصوصيتك محمية</h4>
-                    <p>جميع استفساراتك تبقى سرية ولا يمكن لأي طالب آخر رؤيتها. سيتم الرد على سؤالك عبر واتساب مباشرةً، ولن نشارك معلوماتك مع أي طرف ثالث. نلتزم بتقديم إجابات دقيقة من قبل مشرفين متخصصين.</p>
+                    <p>جميع استفساراتك تبقى سرية. سيتم الرد عبر واتساب على الرقم المسجل. يمكنك متابعة الردود هنا أيضاً.</p>
                 </div>
             </div>
 
@@ -1092,17 +1082,16 @@
                     <button class="questions-tab" data-filter="answered">تم الرد</button>
                 </div>
                 
-                <div class="question-list" id="questionList">
-                </div>
+                <div class="question-list" id="questionList"></div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة عرض السؤال -->
+    <!-- نافذة عرض السؤال والمحادثة -->
     <div class="question-modal" id="questionModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-question-circle"></i>عرض السؤال</h3>
+                <h3><i class="fas fa-question-circle"></i>السؤال والمحادثة</h3>
                 <button class="close-modal" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -1137,11 +1126,19 @@
                     <div class="value" id="modalQuestion">-</div>
                 </div>
 
-                <div class="answer-content" id="answerSection" style="display: none;">
-                    <div class="answer-label">الإجابة من المشرف:</div>
-                    <div class="answer-text" id="modalAnswer">-</div>
-                    <div style="margin-top: 20px; color: var(--gray); font-size: 14px;">
-                        <i class="fas fa-clock"></i> تاريخ الرد: <span id="modalAnswerDate">-</span>
+                <!-- الردود (المحادثة) -->
+                <div class="replies-section" id="repliesSection">
+                    <div class="replies-title">
+                        <i class="fas fa-comments"></i> المحادثة
+                    </div>
+                    <div id="repliesContainer"></div>
+                    
+                    <!-- نموذج إضافة رد جديد -->
+                    <div class="reply-form">
+                        <input type="text" class="reply-input" id="replyInput" placeholder="اكتب ردك هنا...">
+                        <button class="reply-send-btn" id="sendReplyBtn">
+                            <i class="fas fa-paper-plane"></i> إرسال
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1155,7 +1152,7 @@
                 <i class="fas fa-check"></i>
             </div>
             <h3>تم استلام سؤالك بنجاح!</h3>
-            <p>سوف يتم الرد عليك عبر واتساب في أقرب وقت ممكن. يمكنك تتبع حالة سؤالك من قائمة "أسئلتي السابقة". ستتلقى إشعاراً عند وصول الرد.</p>
+            <p>سوف يتم الرد عليك عبر واتساب وفي هذه الصفحة.</p>
             <button class="success-btn" id="closeSuccessModal">متابعة</button>
         </div>
     </div>
@@ -1163,22 +1160,16 @@
     <footer class="footer">
         <div class="container">
             <div class="logo">منصة عين التعليمية</div>
-            <p>منصة تعليمية متكاملة تهدف إلى دعم الطلاب في رحلتهم التعليمية وتقديم إجابات دقيقة لاستفساراتهم</p>
             <p>جميع الحقوق محفوظة © <span id="currentYear">2024</span></p>
-            
             <div class="signature">
-                <div class="sponsor-signature">
-                    الراعي الرسمي: <strong>med khay</strong>
-                </div>
-                <div class="designer-signature">
-                    تصميم وتطوير: Hassen Ahmed jdoud
-                </div>
+                <div class="sponsor-signature">الراعي الرسمي: <strong>med khay</strong></div>
+                <div class="designer-signature">تصميم وتطوير: Hassen Ahmed jdoud</div>
             </div>
         </div>
     </footer>
 
     <script>
-        // بيانات مشروعك
+        // -------------------- إعداد Firebase --------------------
         const firebaseConfig = {
             apiKey: "AIzaSyDbM7Ctn_EKQBauI3aMbV3lcrkni_qFtnU",
             authDomain: "eyn-4a521.firebaseapp.com",
@@ -1189,572 +1180,529 @@
             measurementId: "G-SS74B2WPX2"
         };
 
-        // تهيئة فيربيس
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // -------------------- نظام الطالب --------------------
         class StudentSystem {
             constructor() {
                 this.db = db;
                 this.currentStudent = null;
-                this.studentId = null;
+                this.studentPhone = null;
                 this.unsubscribeQuestions = null;
+                this.currentQuestionId = null;
             }
-            
+
             validatePhone(phone) {
-                if (!phone) return true;
-                const phoneRegex = /^\d{8}$/;
-                return phoneRegex.test(phone);
+                return /^\d{8}$/.test(phone);
             }
-            
-            async loginStudent(name) {
+
+            async loginStudent(phone, name) {
                 try {
-                    if (!name.trim()) {
-                        return { success: false, message: 'الرجاء إدخال اسم الطالب' };
+                    if (!this.validatePhone(phone)) {
+                        return { success: false, message: 'رقم الهاتف يجب أن يكون 8 أرقام' };
                     }
-                    
-                    // استخدام localStorage لتخزين اسم الطالب
-                    const studentId = 'student_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    
-                    this.currentStudent = {
-                        id: studentId,
-                        name: name.trim()
-                    };
-                    
-                    this.studentId = studentId;
-                    
-                    // حفظ في localStorage
-                    localStorage.setItem('studentData', JSON.stringify(this.currentStudent));
-                    
+                    if (!name.trim()) {
+                        return { success: false, message: 'الرجاء إدخال الاسم' };
+                    }
+
+                    const studentId = phone;
+                    const studentRef = this.db.collection('students').doc(studentId);
+                    const studentDoc = await studentRef.get();
+
+                    if (studentDoc.exists) {
+                        const existingData = studentDoc.data();
+                        if (existingData.name !== name.trim()) {
+                            await studentRef.update({ name: name.trim(), lastLogin: firebase.firestore.FieldValue.serverTimestamp() });
+                        }
+                        this.currentStudent = { id: studentId, name: name.trim(), phone: phone };
+                    } else {
+                        const studentData = {
+                            name: name.trim(),
+                            phone: phone,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        await studentRef.set(studentData);
+                        this.currentStudent = { id: studentId, name: name.trim(), phone: phone };
+                    }
+
+                    this.studentPhone = studentId;
+                    localStorage.setItem('studentSession', JSON.stringify({ phone, name: name.trim() }));
                     return { success: true, student: this.currentStudent };
                 } catch (error) {
                     console.error('خطأ في تسجيل الدخول:', error);
-                    return { 
-                        success: false, 
-                        message: 'حدث خطأ أثناء تسجيل الدخول' 
-                    };
+                    return { success: false, message: 'حدث خطأ في تسجيل الدخول' };
                 }
             }
-            
-            async submitQuestion(title, content, whatsapp = '') {
+
+            restoreSession() {
+                const session = localStorage.getItem('studentSession');
+                if (session) {
+                    try {
+                        const { phone, name } = JSON.parse(session);
+                        if (phone && name) {
+                            this.studentPhone = phone;
+                            this.currentStudent = { id: phone, name, phone };
+                            return true;
+                        }
+                    } catch (e) {}
+                }
+                return false;
+            }
+
+            async submitQuestion(title, content) {
                 try {
                     if (!this.currentStudent) {
                         return { success: false, message: 'الرجاء تسجيل الدخول أولاً' };
                     }
-                    
                     if (!content.trim()) {
                         return { success: false, message: 'الرجاء كتابة نص السؤال' };
                     }
-                    
-                    if (whatsapp && !this.validatePhone(whatsapp)) {
-                        return { 
-                            success: false, 
-                            message: 'رقم الواتساب يجب أن يكون 8 أرقام فقط' 
-                        };
-                    }
-                    
+
                     const questionData = {
                         studentId: this.currentStudent.id,
                         studentName: this.currentStudent.name,
-                        phone: whatsapp || '',
+                        phone: this.currentStudent.phone,
                         title: title || '',
                         question: content,
-                        answer: '',
                         status: 'pending',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        answeredAt: null
+                        replies: [],
+                        readByAdmin: false,
+                        readByStudent: true
                     };
-                    
+
                     const questionRef = await this.db.collection('questions').add(questionData);
-                    
-                    // إضافة إشعار للمشرف
+
                     await this.db.collection('notifications').add({
                         studentId: this.currentStudent.id,
+                        studentName: this.currentStudent.name,
+                        questionId: questionRef.id,
                         title: 'سؤال جديد',
                         message: `سؤال جديد من ${this.currentStudent.name}`,
                         read: false,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         type: 'admin'
                     });
-                    
-                    // إضافة إشعار للطالب
-                    await this.db.collection('notifications').add({
-                        studentId: this.currentStudent.id,
-                        title: 'تم استلام سؤالك',
-                        message: `تم استلام سؤالك وسيتم الرد عليك قريباً`,
-                        read: false,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        type: 'student'
-                    });
-                    
-                    return { 
-                        success: true, 
-                        questionId: questionRef.id, 
-                        question: questionData 
-                    };
+
+                    return { success: true, questionId: questionRef.id };
                 } catch (error) {
                     console.error('خطأ في إرسال السؤال:', error);
-                    return { 
-                        success: false, 
-                        message: `حدث خطأ: ${error.message}` 
-                    };
+                    return { success: false, message: `حدث خطأ: ${error.message}` };
                 }
             }
-            
+
+            async addReply(questionId, content) {
+                try {
+                    if (!this.currentStudent) throw new Error('غير مسجل');
+                    if (!content.trim()) throw new Error('الرد فارغ');
+
+                    const questionRef = this.db.collection('questions').doc(questionId);
+                    const questionDoc = await questionRef.get();
+                    if (!questionDoc.exists) throw new Error('السؤال غير موجود');
+
+                    const question = questionDoc.data();
+                    if (question.studentId !== this.currentStudent.id) throw new Error('لا تملك صلاحية');
+
+                    const reply = {
+                        id: `reply_${Date.now()}_${Math.random()}`,
+                        senderId: this.currentStudent.id,
+                        senderName: this.currentStudent.name,
+                        senderRole: 'student',
+                        content: content.trim(),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        readByAdmin: false,
+                        readByStudent: true
+                    };
+
+                    await questionRef.update({
+                        replies: firebase.firestore.FieldValue.arrayUnion(reply),
+                        status: 'pending'
+                    });
+
+                    await this.db.collection('notifications').add({
+                        studentId: this.currentStudent.id,
+                        studentName: this.currentStudent.name,
+                        questionId: questionId,
+                        title: 'رد جديد من طالب',
+                        message: `رد من ${this.currentStudent.name} على سؤال`,
+                        read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        type: 'admin'
+                    });
+
+                    return { success: true };
+                } catch (error) {
+                    console.error('خطأ في إضافة الرد:', error);
+                    return { success: false, message: error.message };
+                }
+            }
+
             async getStudentQuestions() {
                 try {
-                    if (!this.currentStudent) {
-                        return [];
-                    }
-                    
+                    if (!this.currentStudent) return [];
                     const snapshot = await this.db.collection('questions')
                         .where('studentId', '==', this.currentStudent.id)
                         .get();
-                    
-                    const questions = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    
-                    // ترتيب حسب التاريخ (الأحدث أولاً)
+                    const questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     questions.sort((a, b) => {
-                        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
-                        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
-                        return dateB - dateA;
+                        const ta = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                        const tb = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                        return tb - ta;
                     });
-                    
                     return questions;
                 } catch (error) {
-                    console.error('خطأ في جلب أسئلة الطالب:', error);
+                    console.error('خطأ في جلب الأسئلة:', error);
                     return [];
                 }
             }
-            
+
             async getQuestionById(questionId) {
+                const doc = await this.db.collection('questions').doc(questionId).get();
+                if (!doc.exists) throw new Error('السؤال غير موجود');
+                const question = { id: doc.id, ...doc.data() };
+                if (question.studentId !== this.currentStudent?.id) throw new Error('غير مصرح');
+                return question;
+            }
+
+            async markRepliesAsReadByStudent(questionId) {
                 try {
-                    const doc = await this.db.collection('questions').doc(questionId).get();
-                    if (doc.exists) {
-                        const question = { id: doc.id, ...doc.data() };
-                        
-                        if (question.studentId !== this.currentStudent?.id) {
-                            throw new Error('ليس لديك صلاحية لعرض هذا السؤال');
+                    const questionRef = this.db.collection('questions').doc(questionId);
+                    const questionDoc = await questionRef.get();
+                    if (!questionDoc.exists) return;
+                    const question = questionDoc.data();
+                    if (question.studentId !== this.currentStudent?.id) return;
+
+                    const updatedReplies = (question.replies || []).map(reply => {
+                        if (!reply.readByStudent && reply.senderRole !== 'student') {
+                            reply.readByStudent = true;
                         }
-                        
-                        return question;
-                    }
-                    return null;
+                        return reply;
+                    });
+
+                    await questionRef.update({ replies: updatedReplies });
                 } catch (error) {
-                    console.error('خطأ في جلب السؤال:', error);
-                    throw error;
+                    console.error('خطأ في تحديث القراءة:', error);
                 }
             }
-            
+
             setupQuestionsListener(callback) {
                 if (!this.currentStudent) return null;
-                
-                if (this.unsubscribeQuestions) {
-                    this.unsubscribeQuestions();
-                }
-                
+                if (this.unsubscribeQuestions) this.unsubscribeQuestions();
+
                 this.unsubscribeQuestions = this.db.collection('questions')
                     .where('studentId', '==', this.currentStudent.id)
                     .onSnapshot(snapshot => {
-                        const questions = snapshot.docs.map(doc => ({
-                            id: doc.id,
-                            ...doc.data()
-                        }));
-                        
-                        // الترتيب يدوياً على جانب العميل
+                        const questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         questions.sort((a, b) => {
-                            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
-                            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
-                            return dateB - dateA;
+                            const ta = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                            const tb = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                            return tb - ta;
                         });
-                        
                         callback(questions);
-                    }, error => {
-                        console.error('خطأ في مستمع الأسئلة:', error);
-                    });
-                    
+                    }, error => console.error('مستمع الأسئلة:', error));
+
                 return this.unsubscribeQuestions;
             }
         }
 
         const studentSystem = new StudentSystem();
 
-        // ==================== دوال المساعدة ====================
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-        
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-        
+        function showLoading() { document.getElementById('loadingOverlay').style.display = 'flex'; }
+        function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+
         function showNotification(title, message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            
             notification.innerHTML = `
-                <div>
-                    <strong style="display: block; margin-bottom: 5px;">${title}</strong>
-                    <div>${message}</div>
-                </div>
+                <div><strong>${title}</strong><div style="margin-top:5px;">${message}</div></div>
                 <button class="close-notification">&times;</button>
             `;
-            
             document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
+            setTimeout(() => notification.classList.add('show'), 10);
             const autoRemove = setTimeout(() => {
                 notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
+                setTimeout(() => notification.remove(), 300);
             }, 5000);
-            
             notification.querySelector('.close-notification').addEventListener('click', () => {
                 clearTimeout(autoRemove);
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            });
-            
-            notification.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('close-notification')) {
-                    clearTimeout(autoRemove);
-                    notification.classList.remove('show');
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }
+                notification.remove();
             });
         }
-        
-        function checkLoginState() {
-            const studentData = localStorage.getItem('studentData');
-            if (studentData) {
-                try {
-                    const student = JSON.parse(studentData);
-                    studentSystem.currentStudent = student;
-                    studentSystem.studentId = student.id;
-                    showStudentDashboard();
-                } catch (error) {
-                    console.error('خطأ في تحميل بيانات الطالب:', error);
-                    localStorage.removeItem('studentData');
-                }
+
+        function checkAndRestoreSession() {
+            if (studentSystem.restoreSession()) {
+                document.getElementById('loginContainer').classList.remove('active');
+                document.getElementById('studentDashboard').classList.add('active');
+                updateUserInfo();
+                loadUserQuestions();
+                startRealTimeListeners();
             }
         }
-        
-        function showStudentDashboard() {
-            document.getElementById('loginContainer').classList.remove('active');
-            document.getElementById('studentDashboard').classList.add('active');
-            updateUserInfo();
-            loadUserQuestions();
-            startRealTimeListeners();
-        }
-        
+
         function updateUserInfo() {
             if (!studentSystem.currentStudent) return;
-            
             document.getElementById('userName').textContent = `مرحباً، ${studentSystem.currentStudent.name}`;
-            const userAvatar = document.getElementById('userAvatar');
-            userAvatar.textContent = studentSystem.currentStudent.name.charAt(0).toUpperCase();
+            document.getElementById('userPhone').textContent = `رقم الواتساب: ${studentSystem.currentStudent.phone}`;
+            document.getElementById('userAvatar').textContent = studentSystem.currentStudent.name.charAt(0).toUpperCase();
         }
-        
+
         function loadUserQuestions(filter = 'all') {
-            studentSystem.getStudentQuestions().then(questions => {
-                renderQuestionsList(questions, filter);
-            }).catch(error => {
-                console.error('خطأ في تحميل الأسئلة:', error);
-            });
+            studentSystem.getStudentQuestions().then(questions => renderQuestionsList(questions, filter));
         }
-        
+
         function renderQuestionsList(questions, filter = 'all') {
-            const questionList = document.getElementById('questionList');
-            
-            if (filter !== 'all') {
-                questions = questions.filter(q => q.status === filter);
-            }
-            
+            const container = document.getElementById('questionList');
+            if (filter !== 'all') questions = questions.filter(q => q.status === filter);
             if (questions.length === 0) {
-                questionList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--gray);">
-                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p>لا توجد أسئلة ${filter !== 'all' ? 'في هذه القائمة' : 'بعد'}</p>
-                    </div>
-                `;
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-inbox" style="font-size:48px; opacity:0.5;"></i><p>لا توجد أسئلة</p></div>`;
                 return;
             }
-            
-            questionList.innerHTML = '';
-            
+
+            container.innerHTML = '';
             questions.forEach(question => {
-                const questionItem = document.createElement('div');
-                questionItem.className = `question-item ${question.status}`;
-                questionItem.dataset.id = question.id;
-                
-                const date = question.createdAt ? new Date(question.createdAt.toDate ? question.createdAt.toDate() : question.createdAt) : new Date();
-                const dateString = date.toLocaleDateString('ar-SA');
-                const timeString = date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
-                
+                const unreadCount = (question.replies || []).filter(r => !r.readByStudent && r.senderRole !== 'student').length;
+                const date = question.createdAt?.toDate ? question.createdAt.toDate() : new Date(question.createdAt || 0);
+                const dateStr = date.toLocaleDateString('ar-SA');
+                const timeStr = date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+
+                const item = document.createElement('div');
+                item.className = `question-item ${question.status}`;
+                item.dataset.id = question.id;
+
+                let unreadBadge = '';
+                if (unreadCount > 0) unreadBadge = `<div class="unread-badge">${unreadCount}</div>`;
+
                 const statusText = question.status === 'pending' ? 'بانتظار الرد' : 'تم الرد';
                 const statusClass = question.status === 'pending' ? 'status-pending' : 'status-answered';
-                
-                questionItem.innerHTML = `
+
+                const replyCount = (question.replies || []).length;
+                const replyIndicator = replyCount > 0 ? `<span class="reply-indicator"><i class="fas fa-comment"></i> ${replyCount}</span>` : '';
+
+                item.innerHTML = `
+                    ${unreadBadge}
                     <div class="question-header">
                         <div class="question-title">${question.title || 'بدون عنوان'}</div>
                         <div class="question-status ${statusClass}">${statusText}</div>
                     </div>
-                    <div class="question-date">
-                        <i class="fas fa-calendar"></i> ${dateString} - ${timeString}
-                        ${question.phone ? `<span style="margin-right: 15px;">|</span><i class="fab fa-whatsapp"></i> ${question.phone}` : ''}
-                    </div>
-                    <div class="question-content">${question.question.substring(0, 200)}${question.question.length > 200 ? '...' : ''}</div>
-                    ${question.answer ? `
-                        <div class="answer-content">
-                            <div class="answer-label">الإجابة:</div>
-                            <div class="answer-text">${question.answer.substring(0, 150)}${question.answer.length > 150 ? '...' : ''}</div>
-                        </div>
-                    ` : ''}
+                    <div class="question-date"><i class="fas fa-calendar"></i> ${dateStr} - ${timeStr} ${replyIndicator}</div>
+                    <div class="question-content">${question.question.substring(0,150)}${question.question.length>150?'...':''}</div>
                 `;
-                
-                questionItem.addEventListener('click', () => {
-                    openQuestionModal(question.id);
-                });
-                
-                questionList.appendChild(questionItem);
+                item.addEventListener('click', () => openQuestionModal(question.id));
+                container.appendChild(item);
             });
         }
-        
+
         async function openQuestionModal(questionId) {
             try {
+                showLoading();
                 const question = await studentSystem.getQuestionById(questionId);
-                
-                const date = question.createdAt ? new Date(question.createdAt.toDate ? question.createdAt.toDate() : question.createdAt) : new Date();
-                const dateString = date.toLocaleDateString('ar-SA', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    weekday: 'long'
-                });
-                const timeString = date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
-                
-                document.getElementById('modalDate').textContent = `${dateString} - ${timeString}`;
-                document.getElementById('modalName').textContent = question.studentName || 'غير معروف';
-                document.getElementById('modalWhatsapp').textContent = question.phone || 'لم يتم إضافة رقم';
+                studentSystem.currentQuestionId = questionId;
+
+                const date = question.createdAt?.toDate ? question.createdAt.toDate() : new Date(question.createdAt || 0);
+                document.getElementById('modalDate').textContent = `${date.toLocaleDateString('ar-SA')} - ${date.toLocaleTimeString('ar-SA', { hour:'2-digit', minute:'2-digit' })}`;
+                document.getElementById('modalName').textContent = question.studentName || '-';
+                document.getElementById('modalWhatsapp').textContent = question.phone || '-';
                 document.getElementById('modalStatus').textContent = question.status === 'pending' ? 'بانتظار الرد' : 'تم الرد';
                 document.getElementById('modalStatus').className = `question-status ${question.status === 'pending' ? 'status-pending' : 'status-answered'}`;
                 document.getElementById('modalTitle').textContent = question.title || 'بدون عنوان';
                 document.getElementById('modalQuestion').textContent = question.question;
-                
-                const answerSection = document.getElementById('answerSection');
-                if (question.answer) {
-                    answerSection.style.display = 'block';
-                    document.getElementById('modalAnswer').textContent = question.answer;
-                    
-                    const answerDate = question.answeredAt ? new Date(question.answeredAt.toDate ? question.answeredAt.toDate() : question.answeredAt) : date;
-                    const answerDateString = answerDate.toLocaleDateString('ar-SA');
-                    const answerTimeString = answerDate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('modalAnswerDate').textContent = `${answerDateString} - ${answerTimeString}`;
-                } else {
-                    answerSection.style.display = 'none';
-                }
-                
+
+                renderReplies(question.replies || []);
+                await studentSystem.markRepliesAsReadByStudent(questionId);
+
                 document.getElementById('questionModal').classList.add('show');
+                hideLoading();
             } catch (error) {
+                hideLoading();
                 showNotification('خطأ', error.message, 'error');
             }
         }
-        
+
+        function renderReplies(replies) {
+            const container = document.getElementById('repliesContainer');
+            if (!replies || replies.length === 0) {
+                container.innerHTML = `<p style="color: var(--gray); text-align: center;">لا توجد ردود بعد</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            replies.sort((a,b) => {
+                const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp || 0);
+                const tb = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp || 0);
+                return ta - tb;
+            }).forEach(reply => {
+                const replyDiv = document.createElement('div');
+                replyDiv.className = 'reply-item';
+                const date = reply.timestamp?.toDate ? reply.timestamp.toDate() : new Date(reply.timestamp || 0);
+                const timeStr = date.toLocaleTimeString('ar-SA', { hour:'2-digit', minute:'2-digit' });
+                const dateStr = date.toLocaleDateString('ar-SA');
+                const senderLabel = reply.senderRole === 'admin' ? 'المشرف' : reply.senderName;
+                const icon = reply.senderRole === 'admin' ? 'fa-user-tie' : 'fa-user-graduate';
+                replyDiv.innerHTML = `
+                    <div class="reply-header">
+                        <span class="reply-sender"><i class="fas ${icon}"></i> ${senderLabel}</span>
+                        <span class="reply-time">${dateStr} - ${timeStr}</span>
+                    </div>
+                    <div class="reply-content">${reply.content}</div>
+                `;
+                container.appendChild(replyDiv);
+            });
+        }
+
+        async function sendReply() {
+            const input = document.getElementById('replyInput');
+            const content = input.value.trim();
+            if (!content) return;
+            if (!studentSystem.currentQuestionId) return;
+
+            showLoading();
+            const result = await studentSystem.addReply(studentSystem.currentQuestionId, content);
+            hideLoading();
+            if (result.success) {
+                input.value = '';
+                showNotification('تم', 'تم إرسال ردك', 'success');
+            } else {
+                showNotification('خطأ', result.message, 'error');
+            }
+        }
+
         function startRealTimeListeners() {
             studentSystem.setupQuestionsListener(questions => {
                 const activeFilter = document.querySelector('.questions-tab.active')?.dataset.filter || 'all';
                 renderQuestionsList(questions, activeFilter);
+                if (studentSystem.currentQuestionId) {
+                    const modal = document.getElementById('questionModal');
+                    if (modal.classList.contains('show')) {
+                        studentSystem.getQuestionById(studentSystem.currentQuestionId).then(question => {
+                            renderReplies(question.replies || []);
+                        }).catch(console.error);
+                    }
+                }
             });
         }
 
-        // ==================== تهيئة الصفحة ====================
+        // -------------------- تهيئة الصفحة --------------------
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
-            
-            // التحقق من حالة تسجيل الدخول
-            checkLoginState();
-            
-            // إعداد حقل عنوان السؤال
+
+            checkAndRestoreSession();
+
             document.getElementById('questionTitle').addEventListener('input', function() {
-                const length = this.value.length;
-                document.getElementById('titleCharCount').textContent = `${length}/100`;
-                if (length > 100) {
-                    document.getElementById('titleCharCount').classList.add('warning');
-                    this.classList.add('error');
-                } else {
-                    document.getElementById('titleCharCount').classList.remove('warning');
-                    this.classList.remove('error');
-                }
+                const len = this.value.length;
+                document.getElementById('titleCharCount').textContent = `${len}/100`;
             });
-            
-            // إعداد حقل نص السؤال
             document.getElementById('questionContent').addEventListener('input', function() {
-                const length = this.value.length;
-                document.getElementById('contentCharCount').textContent = `${length}/1500`;
-                if (length > 1500) {
-                    document.getElementById('contentCharCount').classList.add('warning');
-                    this.classList.add('error');
-                } else {
-                    document.getElementById('contentCharCount').classList.remove('warning');
-                    this.classList.remove('error');
-                }
+                const len = this.value.length;
+                document.getElementById('contentCharCount').textContent = `${len}/1500`;
             });
-            
-            // تسجيل الدخول
+
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
+                const phone = document.getElementById('studentPhone').value.trim();
                 const name = document.getElementById('studentName').value.trim();
-                
+
+                document.getElementById('phoneError').style.display = 'none';
                 document.getElementById('nameError').style.display = 'none';
-                
-                if (!name) {
-                    document.getElementById('nameError').textContent = 'الرجاء إدخال اسم الطالب';
-                    document.getElementById('nameError').style.display = 'block';
-                    showNotification('خطأ', 'الرجاء إدخال اسم الطالب', 'error');
+
+                if (!/^\d{8}$/.test(phone)) {
+                    document.getElementById('phoneError').textContent = 'رقم الهاتف يجب أن يكون 8 أرقام';
+                    document.getElementById('phoneError').style.display = 'block';
                     return;
                 }
-                
-                const submitBtn = document.getElementById('loginSubmitBtn');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الدخول...';
-                
-                const result = await studentSystem.loginStudent(name);
-                
+                if (!name) {
+                    document.getElementById('nameError').style.display = 'block';
+                    return;
+                }
+
+                const btn = document.getElementById('loginSubmitBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+                const result = await studentSystem.loginStudent(phone, name);
                 if (result.success) {
-                    showNotification('نجاح', 'تم تسجيل الدخول بنجاح', 'success');
-                    showStudentDashboard();
+                    document.getElementById('loginContainer').classList.remove('active');
+                    document.getElementById('studentDashboard').classList.add('active');
+                    updateUserInfo();
+                    loadUserQuestions();
+                    startRealTimeListeners();
+                    showNotification('مرحباً', `أهلاً ${result.student.name}`, 'success');
                 } else {
                     showNotification('خطأ', result.message, 'error');
                 }
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
             });
-            
-            // إرسال سؤال
+
             document.getElementById('questionForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
                 if (!studentSystem.currentStudent) {
                     showNotification('خطأ', 'الرجاء تسجيل الدخول أولاً', 'error');
                     return;
                 }
-                
+
                 const title = document.getElementById('questionTitle').value.trim();
-                const whatsappNumber = document.getElementById('questionWhatsapp').value.trim();
-                const question = document.getElementById('questionContent').value.trim();
-                
-                if (!question) {
-                    document.getElementById('contentError').textContent = 'الرجاء كتابة نص السؤال';
+                const content = document.getElementById('questionContent').value.trim();
+
+                if (!content) {
                     document.getElementById('contentError').style.display = 'block';
-                    document.getElementById('questionContent').classList.add('error');
-                    showNotification('خطأ', 'الرجاء كتابة نص السؤال', 'error');
                     return;
                 }
-                
-                if (whatsappNumber && !studentSystem.validatePhone(whatsappNumber)) {
-                    document.getElementById('whatsappError').textContent = 'رقم الواتساب يجب أن يكون 8 أرقام فقط';
-                    document.getElementById('whatsappError').style.display = 'block';
-                    document.getElementById('questionWhatsapp').classList.add('error');
-                    showNotification('خطأ', 'رقم الواتساب يجب أن يكون 8 أرقام فقط', 'error');
-                    return;
-                }
-                
-                const submitBtn = document.getElementById('submitBtn');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-                
-                const result = await studentSystem.submitQuestion(title, question, whatsappNumber);
-                
+
+                const btn = document.getElementById('submitBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+
+                const result = await studentSystem.submitQuestion(title, content);
                 if (result.success) {
-                    document.getElementById('successModal').classList.add('show');
-                    
                     document.getElementById('questionForm').reset();
                     document.getElementById('titleCharCount').textContent = '0/100';
                     document.getElementById('contentCharCount').textContent = '0/1500';
-                    document.getElementById('contentError').style.display = 'none';
-                    document.getElementById('whatsappError').style.display = 'none';
-                    document.getElementById('questionContent').classList.remove('error');
-                    document.getElementById('questionWhatsapp').classList.remove('error');
-                    
-                    const activeFilter = document.querySelector('.questions-tab.active').dataset.filter;
-                    loadUserQuestions(activeFilter);
+                    document.getElementById('successModal').classList.add('show');
                 } else {
                     showNotification('خطأ', result.message, 'error');
                 }
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال السؤال';
             });
-            
-            // تسجيل الخروج
+
             document.getElementById('logoutBtn').addEventListener('click', function() {
                 if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                    localStorage.removeItem('studentData');
+                    localStorage.removeItem('studentSession');
                     studentSystem.currentStudent = null;
-                    studentSystem.studentId = null;
-                    
+                    studentSystem.studentPhone = null;
+                    if (studentSystem.unsubscribeQuestions) studentSystem.unsubscribeQuestions();
                     document.getElementById('studentDashboard').classList.remove('active');
                     document.getElementById('loginContainer').classList.add('active');
+                    document.getElementById('studentPhone').value = '';
                     document.getElementById('studentName').value = '';
-                    showNotification('تم', 'تم تسجيل خروجك بنجاح', 'info');
                 }
             });
-            
-            // أزرار الفلترة
+
+            document.getElementById('sendReplyBtn').addEventListener('click', sendReply);
+            document.getElementById('replyInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); sendReply(); }
+            });
+
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('questionModal').classList.remove('show');
+                studentSystem.currentQuestionId = null;
+            });
+            document.getElementById('questionModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                    studentSystem.currentQuestionId = null;
+                }
+            });
+            document.getElementById('closeSuccessModal').addEventListener('click', function() {
+                document.getElementById('successModal').classList.remove('show');
+            });
+
             document.querySelectorAll('.questions-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.questions-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     loadUserQuestions(this.dataset.filter);
                 });
-            });
-            
-            // إغلاق نافذة النجاح
-            document.getElementById('closeSuccessModal').addEventListener('click', function() {
-                document.getElementById('successModal').classList.remove('show');
-            });
-            
-            // إغلاق نافذة السؤال
-            document.getElementById('closeModal').addEventListener('click', function() {
-                document.getElementById('questionModal').classList.remove('show');
-            });
-            
-            document.getElementById('questionModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('show');
-                }
-            });
-            
-            // السماح بالدخول بالضغط على Enter
-            document.getElementById('studentName')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('loginSubmitBtn').click();
-                }
             });
         });
     </script>
