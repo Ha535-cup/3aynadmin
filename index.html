@@ -86,6 +86,91 @@
             line-height: 1.8;
         }
 
+        /* شريط التبرعات المتحرك */
+        .donation-slider {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 20px;
+            margin: 20px auto;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .donation-slider h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .donation-slider h3 i {
+            color: gold;
+        }
+
+        .donation-slider p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .donation-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .donation-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            width: 200px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .donation-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .donation-card i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: gold;
+        }
+
+        .donation-card .app-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .donation-card .phone-number {
+            font-size: 20px;
+            font-weight: 800;
+            background: rgba(0,0,0,0.3);
+            padding: 8px;
+            border-radius: 30px;
+            direction: ltr;
+            display: inline-block;
+        }
+
         .container {
             max-width: 800px;
             margin: 30px auto;
@@ -959,6 +1044,8 @@
             .modal-body { padding: 25px 20px; }
             .reply-form { flex-direction: column; }
             .reply-send-btn { padding: 15px; }
+            .donation-cards { flex-direction: column; align-items: center; }
+            .donation-card { width: 100%; max-width: 300px; }
         }
 
         @media (max-width: 480px) {
@@ -1037,6 +1124,7 @@
                 </div>
             </div>
 
+            <!-- نموذج السؤال -->
             <div class="form-card">
                 <h2><i class="fas fa-question-circle"></i>اطرح سؤالك</h2>
                 <p class="form-subtitle">اكتب سؤالك بالتفصيل وسيقوم المشرفون بالرد عليك عبر واتساب (سيتم استخدام رقم هاتفك المسجل)</p>
@@ -1073,6 +1161,30 @@
                 </div>
             </div>
 
+            <!-- شريط التبرعات المتحرك (تحت السؤال وفوق الأسئلة) -->
+            <div class="donation-slider" id="donationSlider">
+                <h3><i class="fas fa-heart"></i> مساهمتك ترجع إليك</h3>
+                <p>نسعى لتطوير المنصة وتوظيف فريق متخصص للرد على استفساراتكم بسرعة ودقة. تبرعك يساعدنا على تحقيق هذا الهدف. كل عطاء يعود إليك بالخير.</p>
+                <div class="donation-cards">
+                    <div class="donation-card" data-app="bankily" data-number="22928262">
+                        <i class="fas fa-university"></i>
+                        <div class="app-name">بنكيلي</div>
+                        <div class="phone-number">22928262</div>
+                    </div>
+                    <div class="donation-card" data-app="sadad" data-number="43288154">
+                        <i class="fas fa-credit-card"></i>
+                        <div class="app-name">السداد</div>
+                        <div class="phone-number">43288154</div>
+                    </div>
+                    <div class="donation-card" data-app="masrafi" data-number="22928262">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div class="app-name">مصرفي</div>
+                        <div class="phone-number">22928262</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الأسئلة الواردة -->
             <div class="my-questions">
                 <h3><i class="fas fa-history"></i>أسئلتي السابقة</h3>
                 
@@ -1293,7 +1405,6 @@
                 }
             }
 
-            // ✅ الإصدار النهائي الصحيح - بدون serverTimestamp() داخل arrayUnion
             async addReply(questionId, content) {
                 try {
                     if (!this.currentStudent) throw new Error('غير مسجل');
@@ -1306,14 +1417,13 @@
                     const question = questionDoc.data();
                     if (question.studentId !== this.currentStudent.id) throw new Error('لا تملك صلاحية');
 
-                    // ❌ لا تستخدم serverTimestamp() هنا - استخدم Timestamp.now()
                     const reply = {
                         id: `reply_${Date.now()}_${Math.random()}`,
                         senderId: this.currentStudent.id,
                         senderName: this.currentStudent.name,
                         senderRole: 'student',
                         content: content.trim(),
-                        timestamp: firebase.firestore.Timestamp.now(), // ✅ يعمل مع arrayUnion
+                        timestamp: firebase.firestore.Timestamp.now(),
                         readByAdmin: false,
                         readByStudent: true
                     };
@@ -1323,7 +1433,6 @@
                         status: 'pending'
                     });
 
-                    // محاولة إضافة إشعار للمشرف (معزولة - لا تؤثر على نجاح العملية)
                     try {
                         await this.db.collection('notifications').add({
                             studentId: this.currentStudent.id,
@@ -1346,7 +1455,6 @@
                 }
             }
 
-            // ✅ استخدام Transaction لتحديث علامات القراءة
             async markRepliesAsReadByStudent(questionId) {
                 try {
                     const questionRef = this.db.collection('questions').doc(questionId);
@@ -1416,6 +1524,30 @@
                     }, error => console.error('❌ مستمع الأسئلة:', error));
 
                 return this.unsubscribeQuestions;
+            }
+
+            // دالة لتسجيل النقر على التبرع
+            async registerDonationClick(appName) {
+                try {
+                    const statsRef = this.db.collection('donationClicks').doc('stats');
+                    await this.db.runTransaction(async (transaction) => {
+                        const doc = await transaction.get(statsRef);
+                        if (!doc.exists) {
+                            // إنشاء المستند إذا لم يكن موجوداً
+                            const data = { bankily: 0, sadad: 0, masrafi: 0 };
+                            data[appName] = 1;
+                            transaction.set(statsRef, data);
+                        } else {
+                            const current = doc.data();
+                            const newValue = (current[appName] || 0) + 1;
+                            transaction.update(statsRef, { [appName]: newValue });
+                        }
+                    });
+                    return { success: true };
+                } catch (error) {
+                    console.error('❌ خطأ في تسجيل النقرة:', error);
+                    return { success: false };
+                }
             }
         }
 
@@ -1606,6 +1738,30 @@
             document.getElementById('currentYear').textContent = new Date().getFullYear();
 
             checkAndRestoreSession();
+
+            // إضافة مستمعي النقر لبطاقات التبرع
+            document.querySelectorAll('.donation-card').forEach(card => {
+                card.addEventListener('click', async function() {
+                    const app = this.dataset.app;
+                    const number = this.dataset.number;
+                    
+                    // نسخ الرقم إلى الحافظة
+                    try {
+                        await navigator.clipboard.writeText(number);
+                        showNotification('تم النسخ', 'تم نسخ الرقم: ' + number, 'success');
+                        
+                        // تسجيل النقرة في Firestore
+                        await studentSystem.registerDonationClick(app);
+                        
+                        // رسالة إضافية
+                        showNotification('شكراً لك', 'شكراً لعطائك، كل هذا من أجلك', 'info');
+                    } catch (err) {
+                        console.error('فشل النسخ:', err);
+                        // بديل: استخدام prompt
+                        prompt('انسخ الرقم يدوياً:', number);
+                    }
+                });
+            });
 
             document.getElementById('questionTitle').addEventListener('input', function() {
                 const len = this.value.length;
